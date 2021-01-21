@@ -3,7 +3,7 @@ import 'package:myrecipes_app/db/recipes_db_worker.dart';
 import 'package:myrecipes_app/models/recipes_model.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class NotesList extends StatelessWidget {
+class RecipesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

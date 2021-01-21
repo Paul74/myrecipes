@@ -20,7 +20,7 @@ class Notebook extends StatelessWidget {
         appBar: AppBar(
           title: Text("Notebook"),
         ),
-        body: Notes(),
+        body: Recipes(),
       ),
     );
 

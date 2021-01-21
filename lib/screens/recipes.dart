@@ -5,9 +5,9 @@ import '../models/recipes_model.dart';
 import 'recipes_list.dart';
 import 'recipes_entry.dart';
 
-class Notes extends StatelessWidget {
+class Recipes extends StatelessWidget {
 
-  Notes() {
+  Recipes() {
     recipesModel.loadData(RecipesDBworker.recipesDBworker);
   }
 
@@ -19,7 +19,7 @@ class Notes extends StatelessWidget {
         builder: (context, recipesModel, child){
           return IndexedStack(
             index: recipesModel.stackIndex,
-            children: [NotesList(), RecipesEntry()],
+            children: [RecipesList(), RecipesEntry()],
           );
         },
       ),
