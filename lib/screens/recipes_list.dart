@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myrecipes_app/db/recipes_db_worker.dart';
 import 'package:myrecipes_app/models/recipes_model.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'dart:io';
 
 class RecipesList extends StatelessWidget {
   @override
@@ -16,6 +17,8 @@ class RecipesList extends StatelessWidget {
       ),
       body: ListView.builder(
         itemCount: recipesModel.recipeList.length,
+        itemExtent: 106.0,
+        padding: EdgeInsets.all(4.0),
         itemBuilder: (BuildContext inBuildContext, int inIndex){
           Recipe recipe = recipesModel.recipeList[inIndex];
           Color color = Colors.white;
@@ -34,8 +37,12 @@ class RecipesList extends StatelessWidget {
               break;
           }
           return Card(
-            margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-            elevation: 6,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),),
+            clipBehavior: Clip.hardEdge,
+            color: Colors.brown.shade100,
+            //padding: EdgeInsets.fromLTRB(0.0,0.0,0.0,0.0),
+            margin: EdgeInsets.all(5.0),
             child: Slidable(
               actionPane: SlidableScrollActionPane(),
               actionExtentRatio: .25,
@@ -45,21 +52,49 @@ class RecipesList extends StatelessWidget {
                   color: Colors.red,
                   icon: Icons.delete,
                   onTap: (){
+                    print("Card deleting");
                     _deleteRecipe(context, recipe);
                   },
                 ),
               ],
-              child: ListTile(
-                title: Text("${recipe.title}"),
-                subtitle: Text("${recipe.content}"),
-                tileColor: color,
-                leading: Icon(Icons.photo),
-                trailing: Icon(Icons.arrow_right),
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
                 onTap: () async {
+                  print("card tapped");
                   recipesModel.recipeBeingEdited = await RecipesDBworker.recipesDBworker.get(recipe.id);
                   recipesModel.setRecipeColor(recipesModel.recipeBeingEdited.color);
                   recipesModel.setStackIndex(1);
                 },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 2,
+                      child: SizedBox.expand(child:
+                        Image.file(File('storage/emulated/0/Download/catEU.jpg'),
+                        fit: BoxFit.cover,
+                      ),),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: _RecipeDescription(
+                        title: "${recipe.title}",
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: _Details(
+                        fav: "fav",
+                        difficulty: "hard",
+                        time: 9,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.more_vert,
+                      size: 16.0,
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -105,4 +140,73 @@ class RecipesList extends StatelessWidget {
     );
   }
 
+}
+
+class _RecipeDescription extends StatelessWidget {
+  const _RecipeDescription({
+    Key key,
+    this.title,
+  }) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(7.0, 0.0, 0.0, 0.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 16.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Details extends StatelessWidget {
+  const _Details({
+    Key key,
+    this.fav,
+    this.difficulty,
+    this.time,
+  }) : super(key: key);
+
+  final String fav;
+  final String difficulty;
+  final int time;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            fav,
+            style: const TextStyle(fontSize: 12.0),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
+          Text(
+            difficulty,
+            style: const TextStyle(fontSize: 12.0),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
+          Text(
+            '$time\'',
+            style: const TextStyle(fontSize: 12.0),
+          ),
+        ],
+      ),
+    );
+  }
 }

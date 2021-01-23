@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/utils.dart' as utils;
 import 'screens/recipes.dart';
+import 'package:myrecipes_app/models/recipes_model.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +21,16 @@ class Notebook extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: Text("Notebook"),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                print("add recipe");
+                recipesModel.recipeBeingEdited = Recipe();
+                recipesModel.setStackIndex(1);
+              },
+            ),
+          ],
         ),
         body: Recipes(),
       ),

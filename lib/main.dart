@@ -8,15 +8,19 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:myrecipes_app/xxx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/utils.dart' as utils;
 import 'screens/recipes.dart';
+import 'package:myrecipes_app/models/recipes_model.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Directory docsDir = await getApplicationDocumentsDirectory();
   utils.docsDir = docsDir;
-  runApp(MyApp());
+    runApp(Notebook());
+    //runApp(MyApp());
 }
 
 /// This is the main application widget.
@@ -28,7 +32,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: _title,
       home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
+        appBar: AppBar(
+            title: const Text(_title),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  print("add recipe");
+                  recipesModel.recipeBeingEdited = Recipe();
+                  recipesModel.setStackIndex(1);
+                },
+              ),
+            ],
+        ),
         body: MyStatelessWidget(),
       ),
     );
@@ -59,32 +75,53 @@ class CustomListItem extends StatelessWidget {
       color: Colors.brown.shade100,
       //padding: EdgeInsets.fromLTRB(0.0,0.0,0.0,0.0),
       margin: EdgeInsets.all(5.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: thumbnail,
-          ),
-          Expanded(
-            flex: 4,
-            child: _RecipeDescription(
-              title: title,
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: _Details(
-              fav: fav,
-              difficulty: difficulty,
-              time: time,
-            ),
-          ),
-          const Icon(
-            Icons.more_vert,
-            size: 16.0,
+      child: Slidable(
+        actionPane: SlidableScrollActionPane(),
+        actionExtentRatio: .25,
+        secondaryActions: [
+          IconSlideAction(
+            caption: "Delete",
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: (){
+              print('Card deleted.');
+              //_deleteRecipe(context, recipe);
+            },
           ),
         ],
+        child: InkWell(
+          splashColor: Colors.blue.withAlpha(30),
+          onTap: () {
+            print('Card tapped.');
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: thumbnail,
+              ),
+              Expanded(
+                flex: 4,
+                child: _RecipeDescription(
+                  title: title,
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: _Details(
+                  fav: fav,
+                  difficulty: difficulty,
+                  time: time,
+                ),
+              ),
+              const Icon(
+                Icons.more_vert,
+                size: 16.0,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
