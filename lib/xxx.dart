@@ -22,6 +22,7 @@ class Notebook extends StatelessWidget {
         appBar: AppBar(
           title: Text("Notebook"),
           actions: <Widget>[
+            if (recipesModel.stackIndex==0) //da implementare il funzionamento, non si aggiorna la appbar
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
