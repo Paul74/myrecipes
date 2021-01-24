@@ -18,8 +18,12 @@ class RecipesDBworker {
           await inDB.execute("CREATE TABLE IF NOT EXISTS recipes ("
           "id INTEGER PRIMARY KEY,"
           "title TEXT,"
-          "content TEXT,"
-          "color TEXT)");
+          "minutes INTEGER,"
+          "difficulty TEXT,"
+          "ingredients TEXT,"
+          "preparation TEXT,"
+          "notes TEXT)");
+          //"color TEXT)");
         });
     }
     return _db;
@@ -29,8 +33,12 @@ class RecipesDBworker {
     Recipe recipe = Recipe();
     recipe.id = inMap["id"];
     recipe.title = inMap["title"];
-    recipe.content = inMap["content"];
-    recipe.color = inMap["color"];
+    recipe.notes = inMap["notes"];
+    recipe.minutes = inMap["minutes"];
+    recipe.difficulty = inMap["difficulty"];
+    recipe.ingredients = inMap["ingredients"];
+    recipe.preparation = inMap["preparation"];
+    //recipe.color = inMap["color"];
     return recipe;
   }
 
@@ -38,8 +46,12 @@ class RecipesDBworker {
     Map<String, dynamic> map = Map<String, dynamic>();
     map["id"] = inRecipe.id;
     map["title"] = inRecipe.title;
-    map["content"] = inRecipe.content;
-    map["color"] = inRecipe.color;
+    map["notes"] = inRecipe.notes;
+    map["minutes"] = inRecipe.minutes;
+    map["difficulty"] = inRecipe.difficulty;
+    map["ingredients"] = inRecipe.ingredients;
+    map["preparation"] = inRecipe.preparation;
+    //map["color"] = inRecipe.color;
     return map;
   }
 
@@ -51,9 +63,9 @@ class RecipesDBworker {
       id = 1;
     }
     return await db.rawInsert(
-      "INSERT INTO recipes (id, title, content, color) "
-      "VALUES (?, ?, ?, ?)",
-      [id, inRecipe.title, inRecipe.content, inRecipe.color]
+      "INSERT INTO recipes (id, title, notes, minutes, difficulty, ingredients, preparation) "
+      "VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [id, inRecipe.title, inRecipe.notes, inRecipe.minutes, inRecipe.difficulty, inRecipe.ingredients, inRecipe.preparation]//, inRecipe.color]
     );
   }
 

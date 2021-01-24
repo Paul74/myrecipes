@@ -21,7 +21,7 @@ class RecipesList extends StatelessWidget {
         padding: EdgeInsets.all(4.0),
         itemBuilder: (BuildContext inBuildContext, int inIndex){
           Recipe recipe = recipesModel.recipeList[inIndex];
-          Color color = Colors.white;
+          /*Color color = Colors.white;
           switch(recipe.color){
             case "red":
               color = Colors.red;
@@ -35,7 +35,7 @@ class RecipesList extends StatelessWidget {
             case "grey":
               color = Colors.grey;
               break;
-          }
+          }*/
           return Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),),
@@ -62,7 +62,7 @@ class RecipesList extends StatelessWidget {
                 onTap: () async {
                   print("card tapped");
                   recipesModel.recipeBeingEdited = await RecipesDBworker.recipesDBworker.get(recipe.id);
-                  recipesModel.setRecipeColor(recipesModel.recipeBeingEdited.color);
+                  //recipesModel.setRecipeColor(recipesModel.recipeBeingEdited.color);
                   recipesModel.setStackIndex(1);
                 },
                 child: Row(
@@ -85,8 +85,8 @@ class RecipesList extends StatelessWidget {
                       flex: 1,
                       child: _Details(
                         fav: "fav",
-                        difficulty: "hard",
-                        time: 9,
+                        difficulty: "${recipe.difficulty}",
+                        minutes: "${recipe.minutes}",
                       ),
                     ),
                     const Icon(
@@ -176,12 +176,12 @@ class _Details extends StatelessWidget {
     Key key,
     this.fav,
     this.difficulty,
-    this.time,
+    this.minutes,
   }) : super(key: key);
 
   final String fav;
   final String difficulty;
-  final int time;
+  final String minutes;
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +202,7 @@ class _Details extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
           Text(
-            '$time\'',
+            '$minutes\'',
             style: const TextStyle(fontSize: 12.0),
           ),
         ],

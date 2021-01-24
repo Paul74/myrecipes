@@ -25,5 +25,14 @@ class Recipes extends StatelessWidget {
       ),
     );
   }
+
+/*  @override
+  Widget build(BuildContext context) {
+    return IndexedStack(
+            index: recipesModel.stackIndex,
+            children: [RecipesList(), RecipesEntry()], // 0=list  1=edit  2=new
+          );
+        }*/
+
     
 }

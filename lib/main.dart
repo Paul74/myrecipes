@@ -19,8 +19,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Directory docsDir = await getApplicationDocumentsDirectory();
   utils.docsDir = docsDir;
-    runApp(Notebook());
-    //runApp(MyApp());
+  runApp(Notebook());
+  print(docsDir);
+  //runApp(MyApp());
 }
 
 /// This is the main application widget.

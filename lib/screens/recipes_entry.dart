@@ -1,159 +1,125 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:myrecipes_app/db/recipes_db_worker.dart';
 import 'package:myrecipes_app/models/recipes_model.dart';
+import '../common/utils.dart' as utils;
 
 class RecipesEntry extends StatelessWidget{
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-        child: Row(
-          children: [
-            FlatButton(
-                onPressed: (){
-                  recipesModel.setStackIndex(0);
-                },
-                child: Text("Cancel"),
-            ),
-            Spacer(),
-            FlatButton(
-                onPressed: (){
-                  _save(context);
-                },
-                child: Text("Save"),
-            ),
-          ],
-        )
-      ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          children: [
-            ListTile(
-              leading: Icon(Icons.title),
-              title: TextFormField(
-                decoration: InputDecoration(hintText: "Title"),
-                initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.title,
-                validator: (String inValue){
-                  if(inValue.length==0){
-                    return "Please enter a title";
-                  }
-                  return null;
-                },
-                onChanged: (String inValue){
-                  recipesModel.recipeBeingEdited.title = inValue;
-                },
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.content_paste),
-              title: TextFormField(
-                decoration: InputDecoration(hintText: "Content"),
-                keyboardType: TextInputType.multiline,
-                maxLines: 4,
-                initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.content,
-                validator: (String inValue){
-                  if(inValue.length==0){
-                    return "Please enter content";
-                  }
-                  return null;
-                },
-                onChanged: (String inValue){
-                  recipesModel.recipeBeingEdited.content = inValue;
-                },
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.color_lens),
-              title: Row(
-                children: [
-                  GestureDetector(
-                    child: Container(
-                      decoration: ShapeDecoration(
-                        shape: Border.all(
-                          color: Colors.red,
-                          width: 18,
-                        ) + Border.all(
-                              width: 6,
-                              color: recipesModel.color == "red" ? Colors.red : Theme.of(context).canvasColor,
-                            )
-                      ),
-                    ),
-                    onTap: (){
-                      recipesModel.recipeBeingEdited.color = "red";
-                      recipesModel.setRecipeColor("red");
-                    },
-                  ),
-                  Spacer(),
-                  GestureDetector(
-                    child: Container(
-                      decoration: ShapeDecoration(
-                          shape: Border.all(
-                            color: Colors.blue,
-                            width: 18,
-                          ) + Border.all(
-                            width: 6,
-                            color: recipesModel.color == "blue" ? Colors.blue : Theme.of(context).canvasColor,
-                          )
-                      ),
-                    ),
-                    onTap: (){
-                      recipesModel.recipeBeingEdited.color = "blue";
-                      recipesModel.setRecipeColor("blue");
-                    },
-                  ),
-                  Spacer(),
-                  GestureDetector(
-                    child: Container(
-                      decoration: ShapeDecoration(
-                          shape: Border.all(
-                            color: Colors.yellow,
-                            width: 18,
-                          ) + Border.all(
-                            width: 6,
-                            color: recipesModel.color == "yellow" ? Colors.yellow : Theme.of(context).canvasColor,
-                          )
-                      ),
-                    ),
-                    onTap: (){
-                      recipesModel.recipeBeingEdited.color = "yellow";
-                      recipesModel.setRecipeColor("yellow");
-                    },
-                  ),
-                  Spacer(),
-                  GestureDetector(
-                    child: Container(
-                      decoration: ShapeDecoration(
-                          shape: Border.all(
-                            color: Colors.grey,
-                            width: 18,
-                          ) + Border.all(
-                            width: 6,
-                            color: recipesModel.color == "grey" ? Colors.grey : Theme.of(context).canvasColor,
-                          )
-                      ),
-                    ),
-                    onTap: (){
-                      recipesModel.recipeBeingEdited.color = "grey";
-                      recipesModel.setRecipeColor("grey");
-                    },
-                  ),
-                ],
-              )
-            ),
-          ],
+    return DefaultTabController(length: 3, child:
+      Scaffold(
+        appBar: AppBar(toolbarHeight : 48.0,
+          bottom: TabBar(
+            labelPadding: EdgeInsets.symmetric(horizontal: 0.0),
+            tabs: [
+              Tab(text: "DESCRIPTION"),
+              Tab(text: "INGREDIENTS"),
+              Tab(text: "PREPARATION"),
+            ],
+          ),
         ),
-      ),
-    );
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          child: Row(
+            children: [
+              FlatButton(
+                  onPressed: (){
+                    recipesModel.setStackIndex(0);
+                  },
+                  child: Text("Cancel"),
+              ),
+              Spacer(),
+              FlatButton(
+                  onPressed: (){
+                    _save(context);
+                  },
+                  child: Text("Save"),
+              ),
+            ],
+          )
+        ),
+
+        body: TabBarView(children: [
+
+          Form(key: _formKey1,
+          child: ListView(children: [
+              ListTile(
+                leading: Icon(Icons.title),
+                title: TextFormField(
+                  decoration: InputDecoration(hintText: "title"),
+                  initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.title,
+                  validator: (String inValue){
+                    if(inValue.length==0){
+                      return "Please enter a title";
+                    }
+                    return null;
+                  },
+                  onChanged: (String inValue){
+                    recipesModel.recipeBeingEdited.title = inValue;
+                  },
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.content_paste),
+                title: TextFormField(
+                  decoration: InputDecoration(hintText: "notes"),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 4,
+                  initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.notes,
+                  /*validator: (String inValue){
+                    if(inValue.length==0){
+                      return "Please enter notes";
+                    }
+                    return null;
+                  },*/
+                  onChanged: (String inValue){
+                    recipesModel.recipeBeingEdited.notes = inValue;
+                  },
+                ),
+              ),
+
+              ListTile(
+                leading: Icon(Icons.access_time),
+                title: TextFormField(
+                  decoration: InputDecoration(hintText: "total time needed"),
+                  keyboardType: TextInputType.number,
+                  initialValue: recipesModel.recipeBeingEdited == null ? null : (recipesModel.recipeBeingEdited.minutes ?? "").toString(),
+                  validator: (String inValue){
+                    if(!utils.isNumeric(inValue)){
+                      return "Please enter only a number";
+                    }
+                    return null;
+                  },
+                  onChanged: (String inValue){
+                    recipesModel.recipeBeingEdited.minutes = int.parse(inValue);
+                  },
+                ),
+              )
+
+
+
+
+          ],
+          ),
+          ),
+
+          Form(key: _formKey2, child:Container()), //TODO
+
+          Form(key: _formKey3, child:Container()) //TODO
+      ])
+    ),);
   }
 
   void _save(BuildContext context) async {
 
-    if(!_formKey.currentState.validate()){
+    if(!_formKey1.currentState.validate()){
       return;
     }
 
