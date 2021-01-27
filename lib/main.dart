@@ -20,7 +20,7 @@ void main() async {
   Directory docsDir = await getApplicationDocumentsDirectory();
   utils.docsDir = docsDir;
   runApp(Notebook());
-  print(docsDir);
+  print(docsDir); //Directory: '/data/user/0/com.example.myrecipes_app/app_flutter'
   //runApp(MyApp());
 }
 

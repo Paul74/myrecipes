@@ -20,6 +20,7 @@ class RecipesDBworker {
           "title TEXT,"
           "minutes INTEGER,"
           "difficulty TEXT,"
+          "persons INTEGER,"
           "ingredients TEXT,"
           "preparation TEXT,"
           "notes TEXT)");
@@ -36,6 +37,7 @@ class RecipesDBworker {
     recipe.notes = inMap["notes"];
     recipe.minutes = inMap["minutes"];
     recipe.difficulty = inMap["difficulty"];
+    recipe.persons = inMap["persons"];
     recipe.ingredients = inMap["ingredients"];
     recipe.preparation = inMap["preparation"];
     //recipe.color = inMap["color"];
@@ -49,6 +51,7 @@ class RecipesDBworker {
     map["notes"] = inRecipe.notes;
     map["minutes"] = inRecipe.minutes;
     map["difficulty"] = inRecipe.difficulty;
+    map["persons"] = inRecipe.persons;
     map["ingredients"] = inRecipe.ingredients;
     map["preparation"] = inRecipe.preparation;
     //map["color"] = inRecipe.color;
@@ -63,9 +66,9 @@ class RecipesDBworker {
       id = 1;
     }
     return await db.rawInsert(
-      "INSERT INTO recipes (id, title, notes, minutes, difficulty, ingredients, preparation) "
-      "VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [id, inRecipe.title, inRecipe.notes, inRecipe.minutes, inRecipe.difficulty, inRecipe.ingredients, inRecipe.preparation]//, inRecipe.color]
+      "INSERT INTO recipes (id, title, notes, minutes, difficulty, persons, ingredients, preparation) "
+      "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [id, inRecipe.title, inRecipe.notes, inRecipe.minutes, inRecipe.difficulty, inRecipe.persons, inRecipe.ingredients, inRecipe.preparation]//, inRecipe.color]
     );
   }
 

@@ -202,7 +202,8 @@ class _Details extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
           Text(
-            '$minutes\'',
+            //'$minutes\'',
+            minutes == 'null' ? '' : ('$minutes\''),
             style: const TextStyle(fontSize: 12.0),
           ),
         ],

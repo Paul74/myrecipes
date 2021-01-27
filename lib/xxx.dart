@@ -23,7 +23,7 @@ class Notebook extends StatelessWidget {
       MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Notebook"),
+          title: Text("myapp"),
           actions: <Widget>[
             //if (recipesModel.stackIndex==0) //da implementare il funzionamento, non si aggiorna la appbar
 

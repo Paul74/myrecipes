@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:myrecipes_app/db/recipes_db_worker.dart';
 import 'package:myrecipes_app/models/recipes_model.dart';
+import 'package:flutter/services.dart'; //for TextInputFormatter
 import '../common/utils.dart' as utils;
 
 class RecipesEntry extends StatelessWidget{
@@ -49,7 +50,7 @@ class RecipesEntry extends StatelessWidget{
         body: TabBarView(children: [
 
           Form(key: _formKey1,
-          child: ListView(children: [
+            child: ListView(children: [
               ListTile(
                 leading: Icon(Icons.title),
                 title: TextFormField(
@@ -90,28 +91,68 @@ class RecipesEntry extends StatelessWidget{
                 title: TextFormField(
                   decoration: InputDecoration(hintText: "total time needed"),
                   keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
                   initialValue: recipesModel.recipeBeingEdited == null ? null : (recipesModel.recipeBeingEdited.minutes ?? "").toString(),
-                  validator: (String inValue){
+                 /* validator: (String inValue){
                     if(!utils.isNumeric(inValue)){
                       return "Please enter only a number";
                     }
                     return null;
-                  },
+                  },*/
                   onChanged: (String inValue){
-                    recipesModel.recipeBeingEdited.minutes = int.parse(inValue);
+                    recipesModel.recipeBeingEdited.minutes = int.tryParse(inValue);
                   },
                 ),
               )
 
-
-
-
-          ],
-          ),
+            ]
+          )
           ),
 
+          /*Form(key: _formKey2,
+            child: ListView(children: [
+              ListTile(
+                leading: Icon(Icons.people),
+                title: TextFormField(
+                  decoration: InputDecoration(hintText: "number of persons"),
+                  initialValue: recipesModel.recipeBeingEdited == null ? null : (recipesModel.recipeBeingEdited.persons ?? "").toString(),
+                  validator: (String inValue){
+                    if(!utils.isNumeric(inValue)){
+                      return "Please enter a number";
+                    }
+                    return null;
+                  },
+                  onChanged: (String inValue){
+                    recipesModel.recipeBeingEdited.persons = int.parse(inValue);
+                  },
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.content_paste),
+                title: TextFormField(
+                  decoration: InputDecoration(hintText: "ingredients"),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 5,
+                  initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.ingredients,
+                  *//*validator: (String inValue){
+                    if(inValue.length==0){
+                      return "Please enter notes";
+                    }
+                    return null;
+                  },*//*
+                  onChanged: (String inValue){
+                    recipesModel.recipeBeingEdited.ingredients = inValue;
+                  },
+                ),
+              ),
+
+            ]
+            )
+          ),
+*/
           Form(key: _formKey2, child:Container()), //TODO
-
           Form(key: _formKey3, child:Container()) //TODO
       ])
     ),);
@@ -122,6 +163,11 @@ class RecipesEntry extends StatelessWidget{
     if(!_formKey1.currentState.validate()){
       return;
     }
+/*    if(!_formKey1.currentState.validate() && !_formKey2.currentState.validate() && !_formKey3.currentState.validate()  ){
+      return;
+    }*/
+
+
 
     //_formKey.currentState.save();
 

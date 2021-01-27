@@ -6,6 +6,7 @@ class Recipe {
   String notes = "";
   int minutes;
   String difficulty = "";
+  int persons;
   String ingredients = "";
   String preparation = "";
   //String color;
