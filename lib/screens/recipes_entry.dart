@@ -105,27 +105,55 @@ class RecipesEntry extends StatelessWidget{
                     recipesModel.recipeBeingEdited.minutes = int.tryParse(inValue);
                   },
                 ),
-              )
+              ),
 
-            ]
+                Container(child:
+                //vedi https://api.flutter.dev/flutter/material/ToggleButtons-class.html
+                //vedi nel recipes_entry del prof il sistema per il cambio dei rettangoli colorati. invece di setState qui sotto provare come ha fatto il prof.
+                ToggleButtons(
+                  children: <Widget>[
+                    Icon(Icons.ac_unit),
+                    Icon(Icons.call),
+                    Icon(Icons.cake),
+                  ],
+                  onPressed: (int index) {
+                    setState(() {
+                      for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
+                        if (buttonIndex == index) {
+                          isSelected[buttonIndex] = !isSelected[buttonIndex];
+                        } else {
+                          isSelected[buttonIndex] = false;
+                        }
+                      }
+                    });
+                  },
+                  isSelected: isSelected,
+                ),
+                )
+            ],
+
           )
           ),
 
-          /*Form(key: _formKey2,
+          Form(key: _formKey2,
             child: ListView(children: [
               ListTile(
                 leading: Icon(Icons.people),
                 title: TextFormField(
                   decoration: InputDecoration(hintText: "number of persons"),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
                   initialValue: recipesModel.recipeBeingEdited == null ? null : (recipesModel.recipeBeingEdited.persons ?? "").toString(),
-                  validator: (String inValue){
+                  /*validator: (String inValue){
                     if(!utils.isNumeric(inValue)){
                       return "Please enter a number";
                     }
                     return null;
-                  },
+                  },*/
                   onChanged: (String inValue){
-                    recipesModel.recipeBeingEdited.persons = int.parse(inValue);
+                    recipesModel.recipeBeingEdited.persons = int.tryParse(inValue);
                   },
                 ),
               ),
@@ -136,12 +164,12 @@ class RecipesEntry extends StatelessWidget{
                   keyboardType: TextInputType.multiline,
                   maxLines: 5,
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.ingredients,
-                  *//*validator: (String inValue){
+                  /*validator: (String inValue){
                     if(inValue.length==0){
-                      return "Please enter notes";
+                      return "Please enter ingredients";
                     }
                     return null;
-                  },*//*
+                  },*/
                   onChanged: (String inValue){
                     recipesModel.recipeBeingEdited.ingredients = inValue;
                   },
@@ -151,9 +179,33 @@ class RecipesEntry extends StatelessWidget{
             ]
             )
           ),
-*/
-          Form(key: _formKey2, child:Container()), //TODO
-          Form(key: _formKey3, child:Container()) //TODO
+          //Form(key: _formKey2, child:Container()), //TODO
+
+          Form(key: _formKey3,
+              child: ListView(children: [
+                ListTile(
+                  leading: Icon(Icons.content_paste),
+                  title: TextFormField(
+                    decoration: InputDecoration(hintText: "preparation"),
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 20,
+                    initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.preparation,
+                    /*validator: (String inValue){
+                    if(inValue.length==0){
+                      return "Please enter ingredients";
+                    }
+                    return null;
+                  },*/
+                    onChanged: (String inValue){
+                      recipesModel.recipeBeingEdited.preparation = inValue;
+                    },
+                  ),
+                ),
+
+              ]
+              )
+          )
+          //Form(key: _formKey3, child:Container()) //TODO
       ])
     ),);
   }
