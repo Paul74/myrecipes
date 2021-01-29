@@ -17,8 +17,8 @@ import 'package:myrecipes_app/models/recipes_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //Directory docsDir = await getApplicationDocumentsDirectory();
-  var docsDir = new Directory('/data/user/0/com.example.myrecipes_app/app_flutter'); //per l'ufficio
+  Directory docsDir = await getApplicationDocumentsDirectory();
+  //var docsDir = new Directory('/data/user/0/com.example.myrecipes_app/app_flutter'); //per l'ufficio
   utils.docsDir = docsDir;
   runApp(Notebook());
   print(docsDir);

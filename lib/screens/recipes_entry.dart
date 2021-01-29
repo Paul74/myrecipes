@@ -74,6 +74,7 @@ class RecipesEntry extends StatelessWidget{
                   keyboardType: TextInputType.multiline,
                   maxLines: 4,
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.notes,
+                  //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                   /*validator: (String inValue){
                     if(inValue.length==0){
                       return "Please enter notes";
@@ -95,6 +96,7 @@ class RecipesEntry extends StatelessWidget{
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                   ],
                   initialValue: recipesModel.recipeBeingEdited == null ? null : (recipesModel.recipeBeingEdited.minutes ?? "").toString(),
+                  //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                  /* validator: (String inValue){
                     if(!utils.isNumeric(inValue)){
                       return "Please enter only a number";
@@ -116,7 +118,7 @@ class RecipesEntry extends StatelessWidget{
                     Icon(Icons.call),
                     Icon(Icons.cake),
                   ],
-                  onPressed: (int index) {
+                  /*onPressed: (int index) {
                     setState(() {
                       for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
                         if (buttonIndex == index) {
@@ -126,8 +128,8 @@ class RecipesEntry extends StatelessWidget{
                         }
                       }
                     });
-                  },
-                  isSelected: isSelected,
+                  },*/
+                  isSelected: [true,false,false]//isSelected,
                 ),
                 )
             ],
@@ -146,6 +148,7 @@ class RecipesEntry extends StatelessWidget{
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                   ],
                   initialValue: recipesModel.recipeBeingEdited == null ? null : (recipesModel.recipeBeingEdited.persons ?? "").toString(),
+                  //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                   /*validator: (String inValue){
                     if(!utils.isNumeric(inValue)){
                       return "Please enter a number";
@@ -162,8 +165,9 @@ class RecipesEntry extends StatelessWidget{
                 title: TextFormField(
                   decoration: InputDecoration(hintText: "ingredients"),
                   keyboardType: TextInputType.multiline,
-                  maxLines: 5,
+                  maxLines: 15,
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.ingredients,
+                  //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                   /*validator: (String inValue){
                     if(inValue.length==0){
                       return "Please enter ingredients";
@@ -188,8 +192,9 @@ class RecipesEntry extends StatelessWidget{
                   title: TextFormField(
                     decoration: InputDecoration(hintText: "preparation"),
                     keyboardType: TextInputType.multiline,
-                    maxLines: 20,
+                    maxLines: 18,
                     initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.preparation,
+                    //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                     /*validator: (String inValue){
                     if(inValue.length==0){
                       return "Please enter ingredients";
@@ -211,11 +216,19 @@ class RecipesEntry extends StatelessWidget{
   }
 
   void _save(BuildContext context) async {
-
-    if(!_formKey1.currentState.validate()){
+  //capire perchè se abilito la validazione qui sotto dà errore validator call on null TODO
+/*    if(!_formKey1.currentState.validate()){
+      return;
+    }*/
+/*    if(!_formKey2.currentState.validate()){
       return;
     }
-/*    if(!_formKey1.currentState.validate() && !_formKey2.currentState.validate() && !_formKey3.currentState.validate()  ){
+    if(!_formKey3.currentState.validate()){
+      return;
+    }*/
+
+
+/*    if(!_formKey1.currentState.validate() || !_formKey2.currentState.validate() || !_formKey3.currentState.validate()  ){
       return;
     }*/
 
