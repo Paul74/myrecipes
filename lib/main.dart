@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
                 onPressed: () {
                   print("add recipe");
                   recipesModel.recipeBeingEdited = Recipe();
+                  recipesModel.selections = [false,false,false];
                   recipesModel.setStackIndex(1);
                 },
               ),

@@ -12,6 +12,7 @@ class RecipesList extends StatelessWidget {
         child: Icon(Icons.add, color: Colors.white),
         onPressed: (){
           recipesModel.recipeBeingEdited = Recipe();
+          recipesModel.selections = [false,false,false];
           recipesModel.setStackIndex(1);
         },
       ),
@@ -60,8 +61,8 @@ class RecipesList extends StatelessWidget {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () async {
-                  print("card tapped");
                   recipesModel.recipeBeingEdited = await RecipesDBworker.recipesDBworker.get(recipe.id);
+                  recipesModel.selections = (recipesModel.recipeBeingEdited.difficulty=="easy")? recipesModel.selections=[true,false,false]:(recipesModel.recipeBeingEdited.difficulty=="medium")? recipesModel.selections=[false,true,false]:(recipesModel.recipeBeingEdited.difficulty=="hard")? recipesModel.selections=[false,false,true]: recipesModel.selections=[false,false,false];
                   //recipesModel.setRecipeColor(recipesModel.recipeBeingEdited.color);
                   recipesModel.setStackIndex(1);
                 },
@@ -76,7 +77,7 @@ class RecipesList extends StatelessWidget {
                       ),),
                     ),
                     Expanded(
-                      flex: 4,
+                      flex: 3,
                       child: _RecipeDescription(
                         title: "${recipe.title}",
                       ),
