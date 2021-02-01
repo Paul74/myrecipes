@@ -69,7 +69,7 @@ class _RecipesEntryState extends State {
                   }
                 ), //(Icons.favorite, color: Colors.red, size: 30),
                 title: TextFormField(
-                  decoration: InputDecoration(labelText: "title:"),
+                  decoration: InputDecoration(labelText: "title:", alignLabelWithHint: true),
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.title,
                   validator: (String inValue){
                     if(inValue.length==0){
@@ -114,7 +114,7 @@ class _RecipesEntryState extends State {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
-                        decoration: InputDecoration(labelText: "total minutes:"),
+                        decoration: InputDecoration(labelText: "total minutes:", alignLabelWithHint: true),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -138,7 +138,7 @@ class _RecipesEntryState extends State {
 
               ListTile(
                 title: TextFormField(
-                  decoration: InputDecoration(labelText: "notes:"),
+                  decoration: InputDecoration(labelText: "notes:", alignLabelWithHint: true, enabledBorder: OutlineInputBorder(), focusedBorder: OutlineInputBorder()),
                   keyboardType: TextInputType.multiline,
                   maxLines: 4,
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.notes,
@@ -164,7 +164,7 @@ class _RecipesEntryState extends State {
               Container(padding: EdgeInsets.fromLTRB(0, 0, 220, 0),
                 child: ListTile(
                   title: TextFormField(
-                    decoration: InputDecoration(labelText: "number of persons:"),
+                    decoration: InputDecoration(labelText: "number of persons:", alignLabelWithHint: true),
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -185,7 +185,7 @@ class _RecipesEntryState extends State {
               ),
               ListTile(
                 title: TextFormField(
-                  decoration: InputDecoration(labelText: "ingredients:"),
+                  decoration: InputDecoration(labelText: "ingredients:", alignLabelWithHint: true, enabledBorder: OutlineInputBorder(), focusedBorder: OutlineInputBorder()),
                   keyboardType: TextInputType.multiline,
                   maxLines: 15,
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.ingredients,
@@ -208,9 +208,9 @@ class _RecipesEntryState extends State {
 
           Form(key: _formKey3,
               child: ListView(children: [
-                ListTile(
+                ListTile(contentPadding: EdgeInsets.fromLTRB(16, 10, 16, 0),
                   title: TextFormField(
-                    decoration: InputDecoration(labelText: "preparation:"),
+                    decoration: InputDecoration(labelText: "preparation:", alignLabelWithHint: true, enabledBorder: OutlineInputBorder(), focusedBorder: OutlineInputBorder()),
                     keyboardType: TextInputType.multiline,
                     maxLines: 18,
                     initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.preparation,

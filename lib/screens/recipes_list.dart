@@ -85,7 +85,7 @@ class RecipesList extends StatelessWidget {
                     Expanded(
                       flex: 1,
                       child: _Details(
-                        fav: "fav",
+                        fav: "${recipe.fav}",
                         difficulty: "${recipe.difficulty}",
                         minutes: "${recipe.minutes}",
                       ),
@@ -191,11 +191,8 @@ class _Details extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            fav,
-            style: const TextStyle(fontSize: 12.0),
-          ),
+        children: <Widget>[fav == '1' ?
+          Icon(Icons.favorite, color: Colors.red, size: 18) : Icon(Icons.favorite_border, color: Colors.grey, size: 18),
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
           Text(
             difficulty,
