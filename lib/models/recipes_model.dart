@@ -5,6 +5,7 @@ class Recipe {
   int id;
   String title = "";
   String notes = "";
+  int fav;
   int minutes;
   String difficulty = "";
   int persons;
@@ -36,6 +37,10 @@ class RecipesModel extends ChangeNotifier {
     } else recipesModel.recipeBeingEdited.difficulty ="";
 
       notifyListeners();
+  }
+
+  void setFav(){
+    notifyListeners();
   }
 
 

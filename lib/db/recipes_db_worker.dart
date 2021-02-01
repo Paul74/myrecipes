@@ -1,4 +1,4 @@
-import 'package:path/path.dart';
+ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../common/utils.dart' as utils;
 import '../models/recipes_model.dart';
@@ -18,6 +18,7 @@ class RecipesDBworker {
           await inDB.execute("CREATE TABLE IF NOT EXISTS recipes ("
           "id INTEGER PRIMARY KEY,"
           "title TEXT,"
+          "fav INTEGER,"
           "minutes INTEGER,"
           "difficulty TEXT,"
           "persons INTEGER,"
@@ -34,6 +35,7 @@ class RecipesDBworker {
     Recipe recipe = Recipe();
     recipe.id = inMap["id"];
     recipe.title = inMap["title"];
+    recipe.fav = inMap["fav"];
     recipe.notes = inMap["notes"];
     recipe.minutes = inMap["minutes"];
     recipe.difficulty = inMap["difficulty"];
@@ -48,6 +50,7 @@ class RecipesDBworker {
     Map<String, dynamic> map = Map<String, dynamic>();
     map["id"] = inRecipe.id;
     map["title"] = inRecipe.title;
+    map["fav"] = inRecipe.fav;
     map["notes"] = inRecipe.notes;
     map["minutes"] = inRecipe.minutes;
     map["difficulty"] = inRecipe.difficulty;
@@ -66,9 +69,9 @@ class RecipesDBworker {
       id = 1;
     }
     return await db.rawInsert(
-      "INSERT INTO recipes (id, title, notes, minutes, difficulty, persons, ingredients, preparation) "
-      "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [id, inRecipe.title, inRecipe.notes, inRecipe.minutes, inRecipe.difficulty, inRecipe.persons, inRecipe.ingredients, inRecipe.preparation]//, inRecipe.color]
+      "INSERT INTO recipes (id, title, fav, notes, minutes, difficulty, persons, ingredients, preparation) "
+      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [id, inRecipe.title, inRecipe.fav, inRecipe.notes, inRecipe.minutes, inRecipe.difficulty, inRecipe.persons, inRecipe.ingredients, inRecipe.preparation]//, inRecipe.color]
     );
   }
 

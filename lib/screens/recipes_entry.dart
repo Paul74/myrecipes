@@ -62,7 +62,12 @@ class _RecipesEntryState extends State {
           Form(key: _formKey1,
             child: ListView(children: [
               ListTile(
-                trailing: favIcon, //(Icons.favorite, color: Colors.red, size: 30),
+                trailing: GestureDetector(child: FavIcon(),
+                  onTap: () {
+                    recipesModel.recipeBeingEdited.fav == 1 ? recipesModel.recipeBeingEdited.fav = 0 : recipesModel.recipeBeingEdited.fav = 1;
+                    recipesModel.setFav();
+                  }
+                ), //(Icons.favorite, color: Colors.red, size: 30),
                 title: TextFormField(
                   decoration: InputDecoration(labelText: "title:"),
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.title,
@@ -278,15 +283,14 @@ class _RecipesEntryState extends State {
 
 }
 
-//TODO creare campo database fav e ricompilare qui sotto in base a fav si o no. poi vedere se va anche nella lista iniziale
+//TODO finire su recipes entry. vedere se va anche nella lista iniziale
 class FavIcon extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    if (recipesModel.recipeBeingEdited.difficulty == "hard") {
-      return Icon(Icons.favorite, color: Colors.red);
-    } else {
+    if (recipesModel.recipeBeingEdited.fav == null || recipesModel.recipeBeingEdited.fav == 0) {
       return Icon(Icons.favorite_border, color: Colors.grey);
+    } else {
+      return Icon(Icons.favorite, color: Colors.red);
     }
   }
 }
-FavIcon favIcon = FavIcon();
