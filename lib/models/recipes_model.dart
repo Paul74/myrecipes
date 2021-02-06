@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class Recipe {
   int id;
+  int idCat;
   String title = "";
   String notes = "";
   int fav;
@@ -40,6 +41,10 @@ class RecipesModel extends ChangeNotifier {
   }
 
   void setFav(){
+    notifyListeners();
+  }
+
+  void setCategory(){
     notifyListeners();
   }
 

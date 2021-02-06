@@ -69,7 +69,7 @@ class _RecipesEntryState extends State {
                   }
                 ), //(Icons.favorite, color: Colors.red, size: 30),
                 title: TextFormField(
-                  decoration: InputDecoration(labelText: "title:", alignLabelWithHint: true),
+                  decoration: InputDecoration(labelText: "title:", floatingLabelBehavior: FloatingLabelBehavior.always), //alignLabelWithHint: true,
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.title,
                   validator: (String inValue){
                     if(inValue.length==0){
@@ -83,9 +83,47 @@ class _RecipesEntryState extends State {
                 ),
               ),
 
+             ListTile(
+               title: InputDecorator(decoration: InputDecoration(labelText: "category:", floatingLabelBehavior: FloatingLabelBehavior.always),
+                 child: DropdownButtonHideUnderline(
+                   child: DropdownButton(
+                     isExpanded: true,
+                     isDense: true,
+                     icon: Icon(Icons.keyboard_arrow_down),
+                     //hint: Text("select a category"),
+                     value: recipesModel.recipeBeingEdited.idCat == null ? null : recipesModel.recipeBeingEdited.idCat, //per provare
+                     items: [
+                       DropdownMenuItem(
+                         child: Text("First Item"),
+                         value: 1,
+                       ),
+                       DropdownMenuItem(
+                         child: Text("Second Item"),
+                         value: 2,
+                       ),
+                       DropdownMenuItem(
+                           child: Text("Third Item"),
+                           value: 3
+                       ),
+                       DropdownMenuItem(
+                           child: Text("Fourth Item"),
+                           value: 4
+                       )
+                      ],
+                       onChanged: (value) {
+                            recipesModel.recipeBeingEdited.idCat = value;
+                            recipesModel.setFav();
+                         },
+                     ),
+                 ),
+               ),
+
+               ),
 
 
-              Container(padding: EdgeInsets.all(16),
+
+
+              Container(padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Row(mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Expanded(
@@ -114,7 +152,7 @@ class _RecipesEntryState extends State {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
-                        decoration: InputDecoration(labelText: "total minutes:", alignLabelWithHint: true),
+                        decoration: InputDecoration(labelText: "total minutes:", floatingLabelBehavior: FloatingLabelBehavior.always),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -138,7 +176,7 @@ class _RecipesEntryState extends State {
 
               ListTile(
                 title: TextFormField(
-                  decoration: InputDecoration(labelText: "notes:", alignLabelWithHint: true, enabledBorder: OutlineInputBorder(), focusedBorder: OutlineInputBorder()),
+                  decoration: InputDecoration(labelText: "notes:", enabledBorder: OutlineInputBorder(), focusedBorder: OutlineInputBorder(), floatingLabelBehavior: FloatingLabelBehavior.always),
                   keyboardType: TextInputType.multiline,
                   maxLines: 4,
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.notes,
@@ -164,7 +202,7 @@ class _RecipesEntryState extends State {
               Container(padding: EdgeInsets.fromLTRB(0, 0, 220, 0),
                 child: ListTile(
                   title: TextFormField(
-                    decoration: InputDecoration(labelText: "number of persons:", alignLabelWithHint: true),
+                    decoration: InputDecoration(labelText: "number of persons:", floatingLabelBehavior: FloatingLabelBehavior.always),
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -185,7 +223,7 @@ class _RecipesEntryState extends State {
               ),
               ListTile(
                 title: TextFormField(
-                  decoration: InputDecoration(labelText: "ingredients:", alignLabelWithHint: true, enabledBorder: OutlineInputBorder(), focusedBorder: OutlineInputBorder()),
+                  decoration: InputDecoration(labelText: "ingredients:", floatingLabelBehavior: FloatingLabelBehavior.always, enabledBorder: OutlineInputBorder(), focusedBorder: OutlineInputBorder()),
                   keyboardType: TextInputType.multiline,
                   maxLines: 15,
                   initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.ingredients,
@@ -210,7 +248,7 @@ class _RecipesEntryState extends State {
               child: ListView(children: [
                 ListTile(contentPadding: EdgeInsets.fromLTRB(16, 10, 16, 0),
                   title: TextFormField(
-                    decoration: InputDecoration(labelText: "preparation:", alignLabelWithHint: true, enabledBorder: OutlineInputBorder(), focusedBorder: OutlineInputBorder()),
+                    decoration: InputDecoration(labelText: "preparation:", floatingLabelBehavior: FloatingLabelBehavior.always, enabledBorder: OutlineInputBorder(), focusedBorder: OutlineInputBorder()),
                     keyboardType: TextInputType.multiline,
                     maxLines: 18,
                     initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.preparation,
@@ -283,7 +321,6 @@ class _RecipesEntryState extends State {
 
 }
 
-//TODO finire su recipes entry. vedere se va anche nella lista iniziale
 class FavIcon extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
