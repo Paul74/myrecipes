@@ -26,7 +26,7 @@ class _RecipesEntryState extends State {
   Widget build(BuildContext context) {
     return DefaultTabController(length: 3, child:
       Scaffold(
-        appBar: AppBar(toolbarHeight : 48.0,
+        appBar: AppBar(toolbarHeight : 48.0, //con 48 nascondo la appbar perchè ho già la app bar dalla home page
           bottom: TabBar(
             labelPadding: EdgeInsets.symmetric(horizontal: 0.0),
             tabs: [
@@ -295,13 +295,13 @@ class _RecipesEntryState extends State {
       return;
     }}
 
-    if (_formKey1.currentState != null) {
+    if (_formKey2.currentState != null) {
     if(!_formKey2.currentState.validate()){
       print('enter 2 correct data');
       return;
     }}
 
-    if (_formKey1.currentState != null) {
+    if (_formKey3.currentState != null) {
     if(!_formKey3.currentState.validate()) {
       print('enter 3 correct data');
       return;

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:myrecipes_app/screens/recipes_entry.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/utils.dart' as utils;
 import 'screens/recipes.dart';
@@ -7,13 +8,27 @@ import 'package:myrecipes_app/models/recipes_model.dart';
 import 'package:provider/provider.dart';
 
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  Directory docsDir = await getApplicationDocumentsDirectory();
-  utils.docsDir = docsDir;
-  runApp(Notebook());
+//TODO conviene gestire le pagine con il semplice navigator, così ho animazioni automatiche e appbar più facili da fare per ogni pagina.
+// vedi https://github.com/flutter/samples/tree/master/provider_shopper
+class Notebook extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("myrecipes"),
+        ),
+        body: Recipes(),
+      ),
+    );
+  }
 }
 
+
+
+
+//segue come avevo fatto io, soprattutto per mettere il + nella appbar. ma è troppo complicato e ci sono cose inutili.
+/*
 class Notebook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -48,6 +63,5 @@ class Notebook extends StatelessWidget {
         body: Recipes(),
       ),
     ),);
-
   }
-}
+}*/

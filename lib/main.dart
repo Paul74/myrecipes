@@ -28,7 +28,8 @@ void main() async {
   //runApp(MyApp());
 }
 
-/// This is the main application widget.
+// quanto segue non serve a niente
+/*
 class MyApp extends StatelessWidget {
   static const String _title = 'MyRecipes';
 
@@ -240,3 +241,4 @@ class MyStatelessWidget extends StatelessWidget {
     );
   }
 }
+*/
