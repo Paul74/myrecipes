@@ -11,8 +11,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:myrecipes_app/xxx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/utils.dart' as utils;
+import 'db/recipes_db_worker.dart';
 import 'screens/recipes.dart';
 import 'package:myrecipes_app/models/recipes_model.dart';
+import 'package:myrecipes_app/models/categories_model.dart';
 
 
 void main() async {
@@ -20,6 +22,7 @@ void main() async {
   Directory docsDir = await getApplicationDocumentsDirectory();
   //var docsDir = new Directory('/data/user/0/com.example.myrecipes_app/app_flutter'); //per l'ufficio
   utils.docsDir = docsDir;
+  categoriesModel.loadData(RecipesDBworker.recipesDBworker); //devo caricare la lista delle categorie
   runApp(Notebook());
   print(docsDir);
   //runApp(MyApp());
