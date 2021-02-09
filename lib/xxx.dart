@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:myrecipes_app/screens/recipes_entry.dart';
+import 'package:myrecipes_app/screens/recipes_list.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/utils.dart' as utils;
 import 'screens/recipes.dart';
@@ -9,17 +10,32 @@ import 'package:provider/provider.dart';
 
 
 //TODO conviene gestire le pagine con il semplice navigator, così ho animazioni automatiche e appbar più facili da fare per ogni pagina.
+//sta funzionando ma non si aggiornano i widget di recipes_entry, devo portare il provider anche lì
 // vedi https://github.com/flutter/samples/tree/master/provider_shopper
 class Notebook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
+/*  ORIGINALE FUNZIONANTE
       home: Scaffold(
         appBar: AppBar(
           title: Text("myrecipes"),
         ),
         body: Recipes(),
       ),
+*/
+
+      // PROVO CON LE ROUTES
+      initialRoute: '/list',
+      routes: {
+        // '/': (context) => MyLogin(),
+        '/list': (context) => Recipes(),
+        '/entry': (context) => RecipesEntry(),
+      },
+      //
+
+
     );
   }
 }

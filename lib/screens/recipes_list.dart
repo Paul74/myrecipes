@@ -63,8 +63,8 @@ class RecipesList extends StatelessWidget {
                 onTap: () async {
                   recipesModel.recipeBeingEdited = await RecipesDBworker.recipesDBworker.get(recipe.id);
                   recipesModel.selections = (recipesModel.recipeBeingEdited.difficulty=="easy")? recipesModel.selections=[true,false,false]:(recipesModel.recipeBeingEdited.difficulty=="medium")? recipesModel.selections=[false,true,false]:(recipesModel.recipeBeingEdited.difficulty=="hard")? recipesModel.selections=[false,false,true]: recipesModel.selections=[false,false,false];
-                  //recipesModel.setRecipeColor(recipesModel.recipeBeingEdited.color);
-                  recipesModel.setStackIndex(1);
+                  //recipesModel.setStackIndex(1);
+                  Navigator.pushNamed(context, '/entry');
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

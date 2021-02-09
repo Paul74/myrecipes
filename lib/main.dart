@@ -22,7 +22,7 @@ void main() async {
   Directory docsDir = await getApplicationDocumentsDirectory();
   //var docsDir = new Directory('/data/user/0/com.example.myrecipes_app/app_flutter'); //per l'ufficio
   utils.docsDir = docsDir;
-  categoriesModel.loadData(RecipesDBworker.recipesDBworker); //devo caricare la lista delle categorie
+  //categoriesModel.loadData(RecipesDBworker.recipesDBworker); //provo a metterlo in recipes.dat devo caricare la lista delle categorie
   runApp(Notebook());
   print(docsDir);
   //runApp(MyApp());

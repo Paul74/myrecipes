@@ -42,7 +42,8 @@ class _RecipesEntryState extends State {
             children: [
               FlatButton(
                   onPressed: (){
-                    recipesModel.setStackIndex(0);
+                    //recipesModel.setStackIndex(0);
+                    Navigator.pushNamed(context, '/list');
                     recipesModel.selections = [false,false,false];
                   },
                   child: Text("Cancel"),
@@ -319,7 +320,8 @@ class _RecipesEntryState extends State {
 
     recipesModel.loadData(RecipesDBworker.recipesDBworker);
 
-    recipesModel.setStackIndex(0);
+    //recipesModel.setStackIndex(0);
+    Navigator.pushNamed(context, '/list');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
