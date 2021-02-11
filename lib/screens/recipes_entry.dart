@@ -6,7 +6,28 @@ import 'package:myrecipes_app/db/recipes_db_worker.dart';
 import 'package:myrecipes_app/models/recipes_model.dart';
 import 'package:myrecipes_app/models/categories_model.dart';
 import 'package:flutter/services.dart'; //for TextInputFormatter
+import 'package:provider/provider.dart';
 import '../common/utils.dart' as utils;
+
+
+class RecipeLoad extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider.value(
+      value: recipesModel,
+      child: Consumer<RecipesModel>(
+        builder: (context, recipesModel, child) {
+          return RecipesEntry();
+        },
+      ),
+    );
+  }
+}
+
+
+
+
+
 
 class RecipesEntry extends StatelessWidget{
 /*
@@ -26,7 +47,7 @@ class _RecipesEntryState extends State {
   Widget build(BuildContext context) {
     return DefaultTabController(length: 3, child:
       Scaffold(
-        appBar: AppBar(toolbarHeight : 48.0, //con 48 nascondo la appbar perchè ho già la app bar dalla home page
+        appBar: AppBar(title: Text("recipe"),//toolbarHeight : 48.0, //con 48 nascondo la appbar perchè ho già la app bar dalla home page
           bottom: TabBar(
             labelPadding: EdgeInsets.symmetric(horizontal: 0.0),
             tabs: [
@@ -43,7 +64,7 @@ class _RecipesEntryState extends State {
               FlatButton(
                   onPressed: (){
                     //recipesModel.setStackIndex(0);
-                    Navigator.pushNamed(context, '/list');
+                    Navigator.pop(context, '/list');
                     recipesModel.selections = [false,false,false];
                   },
                   child: Text("Cancel"),
@@ -321,7 +342,7 @@ class _RecipesEntryState extends State {
     recipesModel.loadData(RecipesDBworker.recipesDBworker);
 
     //recipesModel.setStackIndex(0);
-    Navigator.pushNamed(context, '/list');
+    Navigator.pop(context, '/list');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

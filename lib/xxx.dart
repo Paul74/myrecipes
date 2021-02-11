@@ -16,6 +16,32 @@ class Notebook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(pageTransitionsTheme: PageTransitionsTheme(builders: {
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      }),
+        primaryColorDark: Color(0xFF5D4037),
+        primaryColor: Color(0xFF795548),
+        primaryColorLight: Color(0xFFD7CCC8),
+        accentColor: Color(0xFFFF9800),
+        dividerColor: Color(0xFFBDBDBD),
+        //TODO da mettere i colori testo che sono in formato diverso
+        // Define the default font family.
+        //fontFamily: 'Georgia',
+
+        // Define the default TextTheme. Use this to specify the default
+        // text styling for headlines, titles, bodies of text, and more.
+        textTheme: TextTheme(
+          //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          //bodyText2: TextStyle(fontSize: 14.0),
+          //bodyText1: TextStyle(fontSize: 22.0),
+        ),
+              /*.text-primary-color    { color: #FFFFFF; }
+              .primary-text-color    { color: #212121; }
+              .secondary-text-color  { color: #757575; }*/
+
+      ),
 
 /*  ORIGINALE FUNZIONANTE
       home: Scaffold(
@@ -31,7 +57,7 @@ class Notebook extends StatelessWidget {
       routes: {
         // '/': (context) => MyLogin(),
         '/list': (context) => Recipes(),
-        '/entry': (context) => RecipesEntry(),
+        '/entry': (context) => RecipeLoad(),
       },
       //
 

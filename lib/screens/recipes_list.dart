@@ -8,12 +8,21 @@ class RecipesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(), //TODO to be implemented
+      appBar: AppBar(
+        title: Text("myrecipes"),
+        bottom: PreferredSize(preferredSize: Size.fromHeight(48.0),
+            child: Container() //TODO to be implemented with the categories combo box and other action buttons
+
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add, color: Colors.white),
         onPressed: (){
           recipesModel.recipeBeingEdited = Recipe();
           recipesModel.selections = [false,false,false];
-          recipesModel.setStackIndex(1);
+          //recipesModel.setStackIndex(1);
+          Navigator.pushNamed(context, '/entry');
         },
       ),
       body: ListView.builder(
