@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myrecipes_app/db/recipes_db_worker.dart';
 import 'package:myrecipes_app/models/recipes_model.dart';
+import 'package:myrecipes_app/models/categories_model.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'dart:io';
 
@@ -10,9 +11,60 @@ class RecipesList extends StatelessWidget {
     return Scaffold(
       drawer: Drawer(), //TODO to be implemented
       appBar: AppBar(
-        title: Text("myrecipes"),
+        title: Text("my Recipes"),
         bottom: PreferredSize(preferredSize: Size.fromHeight(48.0),
-            child: Container() //TODO to be implemented with the categories combo box and other action buttons
+            child: Container(height: 64,
+              child: Row(
+                children: [SizedBox(width: 96),
+                  Expanded(
+                    /*1*/
+                    child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                      //crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(height: 58 ,
+                          padding: EdgeInsets.fromLTRB(8,0,8,0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+
+                          child:
+                          InputDecorator(decoration: InputDecoration(labelText: "category:", border: InputBorder.none),
+                            child: DropdownButton(
+                              underline: SizedBox(), //no underline
+                              //dropdownColor: Theme.of(context).primaryColorLight,
+                              //style: TextStyle(color: Theme.of(context).primaryColorLight,),
+                              isExpanded: true,
+                              isDense: true,
+                              icon: Icon(Icons.keyboard_arrow_down, color: Theme.of(context).primaryColorLight),
+                              //hint: Text("select a category"),
+                              value: 1,
+                              items: [for (Category categ in categoriesModel.categoryList) DropdownMenuItem(child: Text(categ.category), value: categ.id)],
+                              onChanged: (value) {
+                                recipesModel.recipeBeingEdited.idCat = value;
+                                recipesModel.setCategory();
+                              },
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                  /*3*/
+                  Icon(
+                    Icons.sort_by_alpha_rounded,
+                    color: Theme.of(context).primaryColorLight,
+                  ),
+                  Icon(
+                    Icons.search_rounded,
+                    color: Theme.of(context).primaryColorLight,
+                  ),
+                ],
+              ),
+
+
+            ) //TODO to be implemented with the categories combo box and other action buttons
 
         ),
       ),
@@ -50,7 +102,7 @@ class RecipesList extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),),
             clipBehavior: Clip.hardEdge,
-            color: Colors.brown.shade100,
+            color: Theme.of(context).primaryColorLight,
             //padding: EdgeInsets.fromLTRB(0.0,0.0,0.0,0.0),
             margin: EdgeInsets.all(5.0),
             child: Slidable(

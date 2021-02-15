@@ -25,10 +25,12 @@ class Notebook extends StatelessWidget {
         primaryColorLight: Color(0xFFD7CCC8),
         accentColor: Color(0xFFFF9800),
         dividerColor: Color(0xFFBDBDBD),
+        //primaryTextTheme: Typography.material2018().white,
+        //textTheme: Typography.material2018().white,
         //TODO da mettere i colori testo che sono in formato diverso
         // Define the default font family.
         //fontFamily: 'Georgia',
-
+        //canvasColor: Colors.white,
         // Define the default TextTheme. Use this to specify the default
         // text styling for headlines, titles, bodies of text, and more.
         textTheme: TextTheme(
@@ -36,6 +38,9 @@ class Notebook extends StatelessWidget {
           //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
           //bodyText2: TextStyle(fontSize: 14.0),
           //bodyText1: TextStyle(fontSize: 22.0),
+        ).apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
         ),
               /*.text-primary-color    { color: #FFFFFF; }
               .primary-text-color    { color: #212121; }
