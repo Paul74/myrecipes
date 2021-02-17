@@ -34,6 +34,9 @@ class RecipesDBworker {
           "category TEXT)");
 
           //procedura per creare delle categorie di default nella tabella categories
+            int id0 = await inDB.rawInsert(
+                'INSERT INTO categories (id, category) VALUES (0, "~ ALL RECIPES ~")');
+            print('inserted1: $id0'); //TODO debug only, remove
             int id1 = await inDB.rawInsert(
                 'INSERT INTO categories (id, category) VALUES (1, "APPETIZERS")');
             print('inserted1: $id1'); //TODO debug only, remove
@@ -99,9 +102,15 @@ class RecipesDBworker {
     return recipeFromMap(rec.first);
   }
 
-  Future<List> getAll() async {
+  Future<List> getAll(IDcat) async {
     Database db = await _getDB();
-    var recs = await db.query("recipes");
+    var recs;
+    //var recs = await db.query("recipes");
+    if (IDcat == 0) {
+      recs = await db.query("recipes"); //IDcat is 0 so retrieve all recipes
+    } else {
+      recs = await db.query("recipes", where: "idCat = ?", whereArgs: [IDcat]);
+    }
     var list = recs.isEmpty ? [] : recs.map((m) => recipeFromMap(m)).toList();
     return list;
   }

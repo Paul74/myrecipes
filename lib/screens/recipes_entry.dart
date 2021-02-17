@@ -116,7 +116,9 @@ class _RecipesEntryState extends State {
                        icon: Icon(Icons.keyboard_arrow_down),
                        //hint: Text("select a category"),
                        value: recipesModel.recipeBeingEdited.idCat == null ? null : recipesModel.recipeBeingEdited.idCat,
-                       items: [for (Category categ in categoriesModel.categoryList) DropdownMenuItem(child: Text(categ.category), value: categ.id)],
+                       items: [
+                         for (Category categ in categoriesModel.categoryList) if (categ.id != 0) DropdownMenuItem(child: Text(categ.category), value: categ.id)
+                       ],
 
 /*                     [
                          DropdownMenuItem(

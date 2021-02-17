@@ -17,6 +17,7 @@ class Recipe {
 
 class RecipesModel extends ChangeNotifier {
   int stackIndex = 0;
+  int idcat = 1;
   List recipeList = [];
   Recipe recipeBeingEdited;
   List<bool> selections; // = [false, false, false];
@@ -50,7 +51,7 @@ class RecipesModel extends ChangeNotifier {
 
 
   void loadData(dynamic inDatabaseWorker) async {
-    recipeList = await inDatabaseWorker.getAll();
+    recipeList = await inDatabaseWorker.getAll(recipesModel.idcat);
     notifyListeners();
   }
 

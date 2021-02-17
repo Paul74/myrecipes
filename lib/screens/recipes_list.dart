@@ -12,54 +12,65 @@ class RecipesList extends StatelessWidget {
       drawer: Drawer(), //TODO to be implemented
       appBar: AppBar(
         title: Text("my Recipes"),
-        bottom: PreferredSize(preferredSize: Size.fromHeight(48.0),
-            child: Container(height: 64,
+        actions: [
+          IconButton(icon: Icon(Icons.add), iconSize: 36, onPressed: (){
+            recipesModel.recipeBeingEdited = Recipe();
+            recipesModel.selections = [false,false,false];
+            //recipesModel.setStackIndex(1);
+            Navigator.pushNamed(context, '/entry');
+          })
+        ],
+        bottom: PreferredSize(preferredSize: Size.fromHeight(52.0),
+            child: Container(padding: EdgeInsets.fromLTRB(0,0,0,4),
               child: Row(
-                children: [SizedBox(width: 96),
+                children: [SizedBox(width: 74),
                   Expanded(
                     /*1*/
-                    child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                      //crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(height: 58 ,
-                          padding: EdgeInsets.fromLTRB(8,0,8,0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10)
-                          ),
+                    child: Container(height: 58 ,
+                      padding: EdgeInsets.fromLTRB(8,0,8,0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)
+                      ),
 
-                          child:
-                          InputDecorator(decoration: InputDecoration(labelText: "category:", border: InputBorder.none),
-                            child: DropdownButton(
-                              underline: SizedBox(), //no underline
-                              //dropdownColor: Theme.of(context).primaryColorLight,
-                              //style: TextStyle(color: Theme.of(context).primaryColorLight,),
-                              isExpanded: true,
-                              isDense: true,
-                              icon: Icon(Icons.keyboard_arrow_down, color: Theme.of(context).primaryColorLight),
-                              //hint: Text("select a category"),
-                              value: 1,
-                              items: [for (Category categ in categoriesModel.categoryList) DropdownMenuItem(child: Text(categ.category), value: categ.id)],
-                              onChanged: (value) {
-                                recipesModel.recipeBeingEdited.idCat = value;
-                                recipesModel.setCategory();
-                              },
-                            ),
-                          ),
+                      child:
+                      InputDecorator(decoration: InputDecoration(labelText: "category:", border: InputBorder.none),
+                        child: DropdownButton(
+                          underline: SizedBox(), //no underline
+                          //dropdownColor: Theme.of(context).primaryColorLight,
+                          //style: TextStyle(color: Theme.of(context).primaryColorLight,),
+                          isExpanded: true,
+                          isDense: true,
+                          icon: Icon(Icons.keyboard_arrow_down, color: Theme.of(context).primaryColorLight),
+                          //hint: Text("select a category"),
+                          value: recipesModel.idcat,
+                          items: [for (Category categ in categoriesModel.categoryList) DropdownMenuItem(
+                              child: Text(categ.category),
+                              value: categ.id
+                          )],
+                          onChanged: (value) {
+                            recipesModel.idcat = value;
+                            recipesModel.loadData(RecipesDBworker.recipesDBworker);
+                            //recipesModel.setCategory();
+                          },
                         ),
-
-                      ],
+                      ),
                     ),
                   ),
+                  SizedBox(width: 24),
                   /*3*/
                   Icon(
                     Icons.sort_by_alpha_rounded,
                     color: Theme.of(context).primaryColorLight,
+                    size: 30,
                   ),
+                  SizedBox(width: 12),
                   Icon(
                     Icons.search_rounded,
                     color: Theme.of(context).primaryColorLight,
+                    size: 30,
                   ),
+                  SizedBox(width: 10),
                 ],
               ),
 

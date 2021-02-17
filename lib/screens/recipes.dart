@@ -9,7 +9,7 @@ import 'recipes_entry.dart';
 class Recipes extends StatelessWidget {
 
   Recipes() {
-    recipesModel.loadData(RecipesDBworker.recipesDBworker);
+    recipesModel.loadData(RecipesDBworker.recipesDBworker); //also in recipes_list  don't know if it's best practice
     categoriesModel.loadData(RecipesDBworker.recipesDBworker); //era neil main ma meglio qui - devo caricare la lista delle categorie
   }
 
