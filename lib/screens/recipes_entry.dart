@@ -1,5 +1,6 @@
 import 'dart:ffi';
-
+import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myrecipes_app/db/recipes_db_worker.dart';
@@ -7,7 +8,13 @@ import 'package:myrecipes_app/models/recipes_model.dart';
 import 'package:myrecipes_app/models/categories_model.dart';
 import 'package:flutter/services.dart'; //for TextInputFormatter
 import 'package:provider/provider.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 import '../common/utils.dart' as utils;
+
+File _selectedImage;
+bool _inProcess = false; //for image picker
 
 
 class RecipeLoad extends StatelessWidget {
@@ -38,7 +45,6 @@ class RecipesEntry extends StatelessWidget{
 
 class _RecipesEntryState extends State {
 */
-
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
@@ -47,7 +53,16 @@ class _RecipesEntryState extends State {
   Widget build(BuildContext context) {
     return DefaultTabController(length: 3, child:
       Scaffold(
-        appBar: AppBar(title: Text("recipe"),//toolbarHeight : 48.0, //con 48 nascondo la appbar perchè ho già la app bar dalla home page
+        appBar: AppBar(
+          title: Text("recipe"),//toolbarHeight : 48.0, //con 48 nascondo la appbar perchè ho già la app bar dalla home page
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: (){
+              Navigator.pop(context, '/list');
+              _selectedImage = null;
+              recipesModel.selections = [false,false,false];
+            },
+          ),
           bottom: TabBar(
             labelPadding: EdgeInsets.symmetric(horizontal: 0.0),
             tabs: [
@@ -60,11 +75,12 @@ class _RecipesEntryState extends State {
         bottomNavigationBar: Padding(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           child: Row(
-            children: [
+            children: <Widget>[
               FlatButton(
                   onPressed: (){
                     //recipesModel.setStackIndex(0);
                     Navigator.pop(context, '/list');
+                    _selectedImage = null;
                     recipesModel.selections = [false,false,false];
                   },
                   child: Text("Cancel"),
@@ -80,7 +96,7 @@ class _RecipesEntryState extends State {
           )
         ),
 
-        body: TabBarView(children: [
+        body: TabBarView(children: <Widget>[
 
           utils.KeepAliveWrapper(
             child: Form(key: _formKey1,
@@ -107,7 +123,75 @@ class _RecipesEntryState extends State {
                   ),
                 ),
 
-               ListTile(
+                Container(padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
+                    child: Row(mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Column(children: <Widget>[
+                          MaterialButton(child: Icon(Icons.camera_alt_rounded, size: 54),
+                              minWidth: 12,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                              elevation: 4,
+                              highlightElevation: 0,
+                              padding: EdgeInsets.fromLTRB(6, 5, 6, 0),
+                              color: Theme.of(context).accentColor,
+                              onPressed: (){
+                                showDialog(context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Text("recipe picture"),
+                                      content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          InkWell(child: Text("take a photo"), onTap: (){print("take");getImage(ImageSource.camera);Navigator.pop(context);},),
+                                          SizedBox(height: 18),
+                                          InkWell(child: Text("load from gallery"), onTap: (){print("load");getImage(ImageSource.gallery);Navigator.pop(context);},),
+                                        ]
+                                      ),
+                                      actions: [TextButton(onPressed: (){Navigator.pop(context);}, child: Text("cancel"))],
+                                    ),
+                                );
+                              })
+                        ],
+                        ),
+                        SizedBox(width: 12),
+                        Stack(
+                          children: <Widget>[
+                            getImageWidget(),
+                            if (recipesModel.recipeBeingEdited.image != "" || _selectedImage != null)
+                            Positioned.fill(
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      showDialog(context: context,
+                                        builder: (_) => AlertDialog(
+                                          content: Container(
+                                              child:
+                                                InkWell(child:
+                                                  //Text("la mia immagine full"),
+                                                  getImageFullWidget(),
+                                                  onTap: (){Navigator.pop(context);},
+                                                ),
+
+                                          ),
+                                          //actions: [TextButton(onPressed: (){Navigator.pop(context);}, child: Text("back"))],
+                                        ),
+                                      );
+                                    },
+                                    onLongPress: (){print("delete picture");}, //TODO delete image procedure
+                                  ),
+                                ),)
+                          ]
+                        ),
+
+
+                      ]
+                    ),
+                ),
+
+
+
+
+
+                ListTile(
                  title: InputDecorator(decoration: InputDecoration(labelText: "category:", floatingLabelBehavior: FloatingLabelBehavior.always),
                    child: DropdownButtonHideUnderline(
                      child: DropdownButton(
@@ -331,9 +415,17 @@ class _RecipesEntryState extends State {
       return;
     }}
 
-
-
     //_formKey.currentState.save();
+
+    //if the user shot or selected a new image, need to copy the file on device and get the path
+    if (_selectedImage != null) {
+      final String path = utils.docsDir.path;
+      final String fileName = basename(_selectedImage.path);
+      final File localImage = await _selectedImage.copy('$path/$fileName');
+      recipesModel.recipeBeingEdited.image = localImage.path;
+    }
+
+
 
     if(recipesModel.recipeBeingEdited.id==null){
       await RecipesDBworker.recipesDBworker.create(recipesModel.recipeBeingEdited);
@@ -344,6 +436,8 @@ class _RecipesEntryState extends State {
     recipesModel.loadData(RecipesDBworker.recipesDBworker);
 
     //recipesModel.setStackIndex(0);
+    _selectedImage = null;
+    recipesModel.selections = [false,false,false];
     Navigator.pop(context, '/list');
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -353,7 +447,6 @@ class _RecipesEntryState extends State {
         content: Text("recipe saved"),
       ),
     );
-
   }
 
 }
@@ -366,5 +459,119 @@ class FavIcon extends StatelessWidget{
     } else {
       return Icon(Icons.favorite, color: Colors.red);
     }
+  }
+}
+
+
+
+
+
+
+getImage(ImageSource source) async {
+  _inProcess = true;
+  File image = await ImagePicker.pickImage(source: source);
+  if(image != null){
+    File cropped = await ImageCropper.cropImage(
+        sourcePath: image.path,
+        aspectRatio: CropAspectRatio(
+            ratioX: 1.33, ratioY: 1),
+        compressQuality: 100,
+        maxWidth: 930,
+        maxHeight: 700,
+        compressFormat: ImageCompressFormat.jpg,
+        androidUiSettings: AndroidUiSettings(
+          toolbarColor: Colors.deepOrange,
+          toolbarTitle: "square crop your image",
+          //statusBarColor: Colors.deepOrange.shade900,
+          backgroundColor: Colors.white,
+        )
+    );
+    _selectedImage = cropped;
+    _inProcess = false;
+
+  } else {
+    _inProcess = false;
+  }
+  recipesModel.setImage();
+}
+
+
+Widget getImageWidget() {
+  print(recipesModel.recipeBeingEdited.image);
+  if(recipesModel.recipeBeingEdited.id==null)
+
+  { //if new recipe
+    if (_selectedImage != null) {
+      return Image.file(
+        _selectedImage,
+        width: 72,
+        height: 54,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.asset(
+        "assets/images/dish-placeholder.jpg",
+        width: 72,
+        height: 54,
+        fit: BoxFit.cover,
+      );
+    }
+  } else
+
+  { //if editing recipe
+    if (recipesModel.recipeBeingEdited.image != "") { //if image exists on database
+      //load image from database
+      if (_selectedImage != null) {
+        return Image.file(
+          _selectedImage,
+          width: 72,
+          height: 54,
+          fit: BoxFit.cover,
+        );
+      } else {
+        return Image.file(
+          File(recipesModel.recipeBeingEdited.image),
+          width: 72,
+          height: 54,
+          fit: BoxFit.cover,
+        );
+      }
+
+    } else { //if no image on database
+      print("editing and NO image on db");
+      if (_selectedImage != null) {
+        return Image.file(
+          _selectedImage,
+          width: 72,
+          height: 54,
+          fit: BoxFit.cover,
+        );
+      } else {
+        return Image.asset(
+          "assets/images/dish-placeholder.jpg",
+          width: 72,
+          height: 54,
+          fit: BoxFit.cover,
+        );
+      }
+    }
+  }
+}
+
+Widget getImageFullWidget() {
+  if (_selectedImage != null) {
+    return Image.file(
+      _selectedImage,
+      width: 373,
+      height: 280,
+      //fit: BoxFit.cover,
+    );
+  } else {
+    return Image.file(
+      File(recipesModel.recipeBeingEdited.image),
+      width: 373,
+      height: 280,
+      //fit: BoxFit.cover,
+    );
   }
 }

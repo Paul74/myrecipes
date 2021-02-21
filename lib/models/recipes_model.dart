@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class Recipe {
   int id;
   int idCat;
+  String image = ""; //path to image file
   String title = "";
   String notes = "";
   int fav;
@@ -21,6 +23,8 @@ class RecipesModel extends ChangeNotifier {
   List recipeList = [];
   Recipe recipeBeingEdited;
   List<bool> selections; // = [false, false, false];
+  //File selectedImage; //for image picker
+  //bool inProcess = false; //for image picker
   //String color;
 
   void setStackIndex(int inStackIndex){
@@ -48,6 +52,11 @@ class RecipesModel extends ChangeNotifier {
   void setCategory(){
     notifyListeners();
   }
+
+  void setImage(){
+    notifyListeners();
+  }
+
 
 
   void loadData(dynamic inDatabaseWorker) async {
