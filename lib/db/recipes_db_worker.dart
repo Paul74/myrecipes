@@ -105,15 +105,29 @@ class RecipesDBworker {
     return recipeFromMap(rec.first);
   }
 
-  Future<List> getAll(IDcat) async {
+  Future<List> getAll(int idcat, String order) async {
     Database db = await _getDB();
     var recs;
     //var recs = await db.query("recipes");
-    if (IDcat == 0) {
-      recs = await db.query("recipes"); //IDcat is 0 so retrieve all recipes
-    } else {
-      recs = await db.query("recipes", where: "idCat = ?", whereArgs: [IDcat]);
+    if (idcat == 0) {
+      if (order=="AZ") {
+        //recs = await db.query("recipes"); //IDcat == 0 means all recipes so retrieve all
+        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY "title" ASC'); //IDcat == 0 means all recipes so retrieve all
+      } else {
+        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY "title" DESC'); //IDcat == 0 means all recipes so retrieve all
+      }
     }
+
+    if (idcat != 0) {
+      //recs = await db.query("recipes", where: "idCat = ?", whereArgs: [idcat]);
+      if (order=="AZ") {
+        recs = await db.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY title ASC", [idcat]);
+        } else {
+        recs = await db.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY title DESC", [idcat]);
+      }
+    }
+
+
     var list = recs.isEmpty ? [] : recs.map((m) => recipeFromMap(m)).toList();
     return list;
   }
@@ -149,6 +163,7 @@ class RecipesDBworker {
  Future<List> getAllcategories() async {
    Database db = await _getDB();
    var categs = await db.query("categories");
+   //var categs = await db.rawQuery('SELECT * FROM "categories" ORDER BY "id"'); //this would work if I need ordering
    var list = categs.isEmpty ? [] : categs.map((m) => categoryFromMap(m)).toList();
    return list;
  }

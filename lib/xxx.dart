@@ -9,8 +9,7 @@ import 'package:myrecipes_app/models/recipes_model.dart';
 import 'package:provider/provider.dart';
 
 
-//TODO conviene gestire le pagine con il semplice navigator, così ho animazioni automatiche e appbar più facili da fare per ogni pagina.
-//sta funzionando ma non si aggiornano i widget di recipes_entry, devo portare il provider anche lì
+//preferisco gestire le pagine con il semplice navigator, così ho animazioni automatiche e appbar più facili da fare per ogni pagina.
 // vedi https://github.com/flutter/samples/tree/master/provider_shopper
 class Notebook extends StatelessWidget {
   @override

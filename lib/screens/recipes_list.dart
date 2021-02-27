@@ -59,10 +59,19 @@ class RecipesList extends StatelessWidget {
                   ),
                   SizedBox(width: 24),
                   /*3*/
-                  Icon(
-                    Icons.sort_by_alpha_rounded,
-                    color: Theme.of(context).primaryColorLight,
-                    size: 30,
+                  InkWell(onTap: (){
+                    if (recipesModel.listOrder == "AZ") {
+                      recipesModel.listOrder = "ZA";
+                    } else {
+                      recipesModel.listOrder = "AZ";
+                    }
+                    recipesModel.loadData(RecipesDBworker.recipesDBworker);
+                  },
+                    child: Icon(
+                      Icons.sort_by_alpha_rounded,
+                      color: Theme.of(context).primaryColorLight,
+                      size: 30,
+                    ),
                   ),
                   SizedBox(width: 12),
                   Icon(
@@ -75,7 +84,7 @@ class RecipesList extends StatelessWidget {
               ),
 
 
-            ) //TODO to be implemented with the categories combo box and other action buttons
+            )
 
         ),
       ),
@@ -88,7 +97,29 @@ class RecipesList extends StatelessWidget {
           Navigator.pushNamed(context, '/entry');
         },
       ),
-      body: ListView.builder(
+      body: (recipesModel.idcat != 0 && recipesModel.recipeList.length == 0)
+      ? Center(child: Text("No recipes for this category", style: TextStyle(fontSize: 18.0)))
+      : (recipesModel.idcat == 0 && recipesModel.recipeList.length == 0)
+      ? Center(heightFactor: 3,
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget> [
+            RichText(text: TextSpan(style: TextStyle(
+              //fontWeight: FontWeight.w400,
+              color: Colors.black,
+              fontSize: 18.0,
+              height: 1.8,
+            ), children: <TextSpan> [
+              TextSpan(text: "insert your recipes\n"),
+              TextSpan(text: "hitting the"),
+              TextSpan(text: " + ", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32.0, height: 0.8)),
+              TextSpan(text: "button"),
+            ])),
+            Image.asset("assets/images/arrow.png", fit: BoxFit.cover, scale: 2)
+          ]
+      )
+      )
+      :
+      ListView.builder(
         itemCount: recipesModel.recipeList.length,
         itemExtent: 106.0,
         padding: EdgeInsets.all(4.0),
@@ -126,7 +157,7 @@ class RecipesList extends StatelessWidget {
                   icon: Icons.delete,
                   onTap: (){
                     print("Card deleting");
-                    _deleteRecipe(context, recipe);
+                    _deleteRecipe(context, recipe, recipe.image);
                   },
                 ),
               ],
@@ -162,9 +193,10 @@ class RecipesList extends StatelessWidget {
                         minutes: "${recipe.minutes}",
                       ),
                     ),
-                    const Icon(
-                      Icons.more_vert,
-                      size: 16.0,
+                    Icon(
+                      Icons.arrow_left_rounded,
+                      size: 22.0,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ],
                 ),
@@ -173,39 +205,41 @@ class RecipesList extends StatelessWidget {
           );
 
         },
-      ),
+      )
+
     );
   }
 
-  Future _deleteRecipe(BuildContext context, Recipe recipe) async {
+  Future _deleteRecipe(BuildContext context, Recipe recipe, String image) async {
     return showDialog(
         context: context,
       barrierDismissible: false,
       builder: (BuildContext inAlertContext){
           return AlertDialog(
             title: Text("Delete recipe"),
-            content: Text("Are you sure you want to delete ${recipe.title}"),
+            content: Text("Are you sure you want to delete ${recipe.title}?"),
             actions: [
-              FlatButton(
-                  onPressed: (){
-                    Navigator.of(inAlertContext).pop();
-                  },
-                  child: Text("Cancel"),
-              ),
-              FlatButton(
+              TextButton(
                   onPressed: () async {
-                    await RecipesDBworker.recipesDBworker.delete(recipe.id);
+                    await RecipesDBworker.recipesDBworker.delete(recipe.id); //delete db entry
+                    if (image != "") recipesModel.deleteImgFile(File(image)); //delete the image file from device
                     Navigator.of(inAlertContext).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           backgroundColor: Colors.red,
                           duration: Duration(seconds: 2),
-                          content: Text("Recipe deleted"),
+                          content: Text("RECIPE DELETED"),
                       ),
                     );
                     recipesModel.loadData(RecipesDBworker.recipesDBworker);
                   },
-                  child: Text("Delete"),
+                  child: Text("YES, DELETE"),
+              ),
+              TextButton(
+                onPressed: (){
+                  Navigator.of(inAlertContext).pop();
+                },
+                child: Text("NO"),
               ),
             ],
           );

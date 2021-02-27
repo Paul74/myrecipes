@@ -15,6 +15,7 @@ import '../common/utils.dart' as utils;
 
 File _selectedImage;
 bool _inProcess = false; //for image picker
+File imgToDelete; //path of image to be deleted
 
 
 class RecipeLoad extends StatelessWidget {
@@ -83,14 +84,14 @@ class _RecipesEntryState extends State {
                     _selectedImage = null;
                     recipesModel.selections = [false,false,false];
                   },
-                  child: Text("Cancel"),
+                  child: Text("CANCEL"),
               ),
               Spacer(),
               FlatButton(
                   onPressed: (){
                     _save(context);
                   },
-                  child: Text("Save"),
+                  child: Text("SAVE"),
               ),
             ],
           )
@@ -136,19 +137,20 @@ class _RecipesEntryState extends State {
                               color: Theme.of(context).accentColor,
                               onPressed: (){
                                 showDialog(context: context,
-                                    builder: (_) => AlertDialog(
+                                    builder: (inAlertContext) => AlertDialog(
                                       title: Text("recipe picture"),
                                       content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          InkWell(child: Text("take a photo"), onTap: (){print("take");getImage(ImageSource.camera);Navigator.pop(context);},),
+                                          InkWell(child: Text("take a photo"), onTap: (){print("take");getImage(ImageSource.camera);Navigator.pop(inAlertContext);},),
                                           SizedBox(height: 18),
-                                          InkWell(child: Text("load from gallery"), onTap: (){print("load");getImage(ImageSource.gallery);Navigator.pop(context);},),
+                                          InkWell(child: Text("load from gallery"), onTap: (){print("load");getImage(ImageSource.gallery);Navigator.pop(inAlertContext);},),
                                         ]
                                       ),
-                                      actions: [TextButton(onPressed: (){Navigator.pop(context);}, child: Text("cancel"))],
+                                      actions: [TextButton(onPressed: (){Navigator.pop(inAlertContext);}, child: Text("CANCEL"))],
                                     ),
-                                );
-                              })
+                                  );
+                                }
+                              )
                         ],
                         ),
                         SizedBox(width: 12),
@@ -162,13 +164,13 @@ class _RecipesEntryState extends State {
                                   child: InkWell(
                                     onTap: () {
                                       showDialog(context: context,
-                                        builder: (_) => AlertDialog(
+                                        builder: (BuildContext inAlertContext) => AlertDialog(
                                           content: Container(
                                               child:
                                                 InkWell(child:
                                                   //Text("la mia immagine full"),
                                                   getImageFullWidget(),
-                                                  onTap: (){Navigator.pop(context);},
+                                                  onTap: (){Navigator.pop(inAlertContext);},
                                                 ),
 
                                           ),
@@ -176,7 +178,22 @@ class _RecipesEntryState extends State {
                                         ),
                                       );
                                     },
-                                    onLongPress: (){print("delete picture");}, //TODO delete image procedure
+                                    onLongPress: (){
+                                      showDialog(context: context,
+                                        builder: (BuildContext inAlertContext) => AlertDialog(
+                                          //title: Text("delete picture"),
+                                          content: //Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.end,
+                                              //children: [
+                                                Text("Delete this picture?", textAlign: TextAlign.center),
+                                              //]
+                                          //),
+                                          actions: [
+                                            TextButton(onPressed: (){deleteImage(); Navigator.pop(inAlertContext);}, child: Text("YES")),
+                                            TextButton(onPressed: (){Navigator.pop(inAlertContext);}, child: Text("NO"))
+                                          ],
+                                        ),
+                                      );
+                                    }
                                   ),
                                 ),)
                           ]
@@ -424,6 +441,13 @@ class _RecipesEntryState extends State {
       final File localImage = await _selectedImage.copy('$path/$fileName');
       recipesModel.recipeBeingEdited.image = localImage.path;
     }
+    //if deleting I need also to delete the image file on the device
+    if (imgToDelete != null) {
+      //final File localImage = await imgToDelete.delete();
+      recipesModel.deleteImgFile(imgToDelete);
+      print("cancellato imgToDelete $imgToDelete");
+      imgToDelete = null;
+    }
 
 
 
@@ -463,7 +487,13 @@ class FavIcon extends StatelessWidget{
 }
 
 
-
+//if deleting I need to delete the file. see above.
+deleteImage() {
+  _selectedImage = null;
+  imgToDelete = File(recipesModel.recipeBeingEdited.image);
+  recipesModel.recipeBeingEdited.image = "";
+  recipesModel.setImage();
+}
 
 
 
@@ -481,7 +511,7 @@ getImage(ImageSource source) async {
         compressFormat: ImageCompressFormat.jpg,
         androidUiSettings: AndroidUiSettings(
           toolbarColor: Colors.deepOrange,
-          toolbarTitle: "square crop your image",
+          toolbarTitle: "crop and accept your image",
           //statusBarColor: Colors.deepOrange.shade900,
           backgroundColor: Colors.white,
         )

@@ -19,10 +19,11 @@ class Recipe {
 
 class RecipesModel extends ChangeNotifier {
   int stackIndex = 0;
-  int idcat = 1;
+  int idcat = 0; //0 to set default all recipes on recipes list opening
   List recipeList = [];
   Recipe recipeBeingEdited;
   List<bool> selections; // = [false, false, false];
+  String listOrder = "AZ";
   //File selectedImage; //for image picker
   //bool inProcess = false; //for image picker
   //String color;
@@ -57,10 +58,17 @@ class RecipesModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  Future<int> deleteImgFile(File file) async {
+    try {
+      await file.delete();
+    } catch (e) {
+      print(e);
+      return 0;
+    }
+  }
 
   void loadData(dynamic inDatabaseWorker) async {
-    recipeList = await inDatabaseWorker.getAll(recipesModel.idcat);
+    recipeList = await inDatabaseWorker.getAll(recipesModel.idcat, recipesModel.listOrder);
     notifyListeners();
   }
 
