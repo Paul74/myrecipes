@@ -37,13 +37,18 @@ class RecipesDBworker {
           //procedura per creare delle categorie di default nella tabella categories
             int id0 = await inDB.rawInsert(
                 'INSERT INTO categories (id, category) VALUES (0, "~ ALL RECIPES ~")');
-            print('inserted1: $id0'); //TODO debug only, remove
             int id1 = await inDB.rawInsert(
                 'INSERT INTO categories (id, category) VALUES (1, "APPETIZERS")');
-            print('inserted1: $id1'); //TODO debug only, remove
             int id2 = await inDB.rawInsert(
                 'INSERT INTO categories (id, category) VALUES (2, "STARTERS")');
-            print('inserted2: $id2'); //TODO debug only, remove
+            int id3 = await inDB.rawInsert(
+                'INSERT INTO categories (id, category) VALUES (3, "MAIN DISHES")');
+            int id4 = await inDB.rawInsert(
+              'INSERT INTO categories (id, category) VALUES (4, "SALADS")');
+            int id5 = await inDB.rawInsert(
+              'INSERT INTO categories (id, category) VALUES (5, "SIDE DISHES")');
+            int id6 = await inDB.rawInsert(
+              'INSERT INTO categories (id, category) VALUES (6, "DESSERTS")');
           //
 
         });
@@ -112,9 +117,11 @@ class RecipesDBworker {
     if (idcat == 0) {
       if (order=="AZ") {
         //recs = await db.query("recipes"); //IDcat == 0 means all recipes so retrieve all
-        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY "title" ASC'); //IDcat == 0 means all recipes so retrieve all
+        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY title ASC'); //IDcat == 0 means all recipes so retrieve all
+      } else if (order == "ZA") {
+        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY title DESC'); //IDcat == 0 means all recipes so retrieve all
       } else {
-        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY "title" DESC'); //IDcat == 0 means all recipes so retrieve all
+        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY id DESC'); //IDcat == 0 means all recipes so retrieve all
       }
     }
 
@@ -122,15 +129,17 @@ class RecipesDBworker {
       //recs = await db.query("recipes", where: "idCat = ?", whereArgs: [idcat]);
       if (order=="AZ") {
         recs = await db.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY title ASC", [idcat]);
-        } else {
+        } else if (order == "ZA") {
         recs = await db.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY title DESC", [idcat]);
+      } else {
+        recs = await db.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY id DESC", [idcat]);
       }
     }
-
 
     var list = recs.isEmpty ? [] : recs.map((m) => recipeFromMap(m)).toList();
     return list;
   }
+
 
   Future update(Recipe inRecipe) async {
     Database db = await _getDB();

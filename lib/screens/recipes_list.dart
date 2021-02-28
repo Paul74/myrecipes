@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myrecipes_app/db/recipes_db_worker.dart';
 import 'package:myrecipes_app/models/recipes_model.dart';
@@ -9,24 +10,26 @@ class RecipesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(), //TODO to be implemented
+      //drawer: Drawer(), //TODO to be implemented
       appBar: AppBar(
         title: Text("my Recipes"),
         actions: [
-          IconButton(icon: Icon(Icons.add), iconSize: 36, onPressed: (){
-            recipesModel.recipeBeingEdited = Recipe();
-            recipesModel.selections = [false,false,false];
-            //recipesModel.setStackIndex(1);
-            Navigator.pushNamed(context, '/entry');
-          })
+          IconButton(icon: Icon(Icons.add), iconSize: 36,
+            onPressed: (){
+              recipesModel.recipeBeingEdited = Recipe();
+              recipesModel.selections = [false,false,false];
+              //recipesModel.setStackIndex(1);
+              Navigator.pushNamed(context, '/entry');
+            })
         ],
         bottom: PreferredSize(preferredSize: Size.fromHeight(52.0),
-            child: Container(padding: EdgeInsets.fromLTRB(0,0,0,4),
+            child: Container(//height: 62,
+              padding: EdgeInsets.fromLTRB(0,0,0,6),
               child: Row(
                 children: [SizedBox(width: 74),
                   Expanded(
                     /*1*/
-                    child: Container(height: 58 ,
+                    child: Container(height: 50,
                       padding: EdgeInsets.fromLTRB(8,0,8,0),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -34,14 +37,15 @@ class RecipesList extends StatelessWidget {
                       ),
 
                       child:
-                      InputDecorator(decoration: InputDecoration(labelText: "category:", border: InputBorder.none),
+                      InputDecorator(decoration: InputDecoration(labelText: "category:", border: InputBorder.none, isDense: true),
                         child: DropdownButton(
                           underline: SizedBox(), //no underline
                           //dropdownColor: Theme.of(context).primaryColorLight,
                           //style: TextStyle(color: Theme.of(context).primaryColorLight,),
                           isExpanded: true,
                           isDense: true,
-                          icon: Icon(Icons.keyboard_arrow_down, color: Theme.of(context).primaryColorLight),
+                          icon: Icon(Icons.keyboard_arrow_down, color: Theme.of(context).primaryColor),
+                          iconSize: 18,
                           //hint: Text("select a category"),
                           value: recipesModel.idcat,
                           items: [for (Category categ in categoriesModel.categoryList) DropdownMenuItem(
@@ -60,13 +64,38 @@ class RecipesList extends StatelessWidget {
                   SizedBox(width: 24),
                   /*3*/
                   InkWell(onTap: (){
-                    if (recipesModel.listOrder == "AZ") {
-                      recipesModel.listOrder = "ZA";
-                    } else {
-                      recipesModel.listOrder = "AZ";
-                    }
-                    recipesModel.loadData(RecipesDBworker.recipesDBworker);
+                    showDialog(context: context,
+                      builder: (inAlertContext) => AlertDialog(
+                        title: Text("list order by", textAlign: TextAlign.center,),
+                        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(child: Text("title"), onTap: (){
+                                recipesModel.listOrder == "AZ" ?
+                                recipesModel.listOrder = "ZA":
+                                recipesModel.listOrder = "AZ";
+                                if (recipesModel.listOrder == "last") recipesModel.listOrder = "AZ";
+                                recipesModel.loadData(RecipesDBworker.recipesDBworker);
+                                Navigator.pop(inAlertContext);
+                                },),
+                              SizedBox(height: 18),
+                              InkWell(child: Text("last added"), onTap: (){
+                                recipesModel.listOrder = "last";
+                                recipesModel.loadData(RecipesDBworker.recipesDBworker);
+                                Navigator.pop(inAlertContext);
+                                },),
+                            ]
+                        ),
+                        //actions: [TextButton(onPressed: (){Navigator.pop(inAlertContext);}, child: Text("CANCEL"))],
+                      ),
+                    );
                   },
+
+                  /*{
+                    recipesModel.listOrder == "AZ" ?
+                      recipesModel.listOrder = "ZA":
+                      recipesModel.listOrder = "AZ";
+                    recipesModel.loadData(RecipesDBworker.recipesDBworker);
+                  },*/
                     child: Icon(
                       Icons.sort_by_alpha_rounded,
                       color: Theme.of(context).primaryColorLight,
@@ -88,7 +117,7 @@ class RecipesList extends StatelessWidget {
 
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+/*      floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add, color: Colors.white),
         onPressed: (){
           recipesModel.recipeBeingEdited = Recipe();
@@ -96,7 +125,7 @@ class RecipesList extends StatelessWidget {
           //recipesModel.setStackIndex(1);
           Navigator.pushNamed(context, '/entry');
         },
-      ),
+      ),*/
       body: (recipesModel.idcat != 0 && recipesModel.recipeList.length == 0)
       ? Center(child: Text("No recipes for this category", style: TextStyle(fontSize: 18.0)))
       : (recipesModel.idcat == 0 && recipesModel.recipeList.length == 0)
@@ -152,7 +181,7 @@ class RecipesList extends StatelessWidget {
               actionExtentRatio: .25,
               secondaryActions: [
                 IconSlideAction(
-                  caption: "Delete",
+                  caption: "DELETE",
                   color: Colors.red,
                   icon: Icons.delete,
                   onTap: (){
@@ -175,7 +204,7 @@ class RecipesList extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: SizedBox.expand(child:
-                        recipe.image != "" ? Image.file(File("${recipe.image}"), fit: BoxFit.cover) : Image.asset("assets/images/dish-placeholder.jpg", fit: BoxFit.cover),
+                        recipe.image != "" ? Image.file(File("${recipe.image}"), fit: BoxFit.cover) : Image.asset("assets/images/dish-placeholder.png", fit: BoxFit.cover),
                         //fit: BoxFit.cover,
                       ),
                     ),
@@ -211,9 +240,7 @@ class RecipesList extends StatelessWidget {
   }
 
   Future _deleteRecipe(BuildContext context, Recipe recipe, String image) async {
-    return showDialog(
-        context: context,
-      barrierDismissible: false,
+    return showDialog(context: context, barrierDismissible: false,
       builder: (BuildContext inAlertContext){
           return AlertDialog(
             title: Text("Delete recipe"),
@@ -228,7 +255,7 @@ class RecipesList extends StatelessWidget {
                       SnackBar(
                           backgroundColor: Colors.red,
                           duration: Duration(seconds: 2),
-                          content: Text("RECIPE DELETED"),
+                          content: Text("RECIPE DELETED", textAlign: TextAlign.center),
                       ),
                     );
                     recipesModel.loadData(RecipesDBworker.recipesDBworker);

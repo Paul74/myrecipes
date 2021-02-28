@@ -23,7 +23,7 @@ class RecipesModel extends ChangeNotifier {
   List recipeList = [];
   Recipe recipeBeingEdited;
   List<bool> selections; // = [false, false, false];
-  String listOrder = "AZ";
+  String listOrder = "last";
   //File selectedImage; //for image picker
   //bool inProcess = false; //for image picker
   //String color;
