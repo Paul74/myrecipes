@@ -9,24 +9,33 @@ import 'dart:io';
 class RecipesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       //drawer: Drawer(), //TODO to be implemented
       appBar: AppBar(
         title: Text("my Recipes"),
         actions: [
-          IconButton(icon: Icon(Icons.add), iconSize: 36,
-            onPressed: (){
-              recipesModel.recipeBeingEdited = Recipe();
-              recipesModel.selections = [false,false,false];
-              //recipesModel.setStackIndex(1);
-              Navigator.pushNamed(context, '/entry');
-            })
+          FloatingActionButton(
+            mini: true,
+            splashColor: theme.primaryColorLight,
+            elevation: 5,
+            highlightElevation: 6,
+            child: Icon(Icons.add, size: 36, color: theme.primaryColorDark),
+              onPressed: (){
+                recipesModel.recipeBeingEdited = Recipe();
+                recipesModel.selections = [false,false,false];
+                //recipesModel.setStackIndex(1);
+                Navigator.pushNamed(context, '/entry');
+              },
+          ),SizedBox(width: 4)
         ],
         bottom: PreferredSize(preferredSize: Size.fromHeight(52.0),
             child: Container(//height: 62,
               padding: EdgeInsets.fromLTRB(0,0,0,6),
               child: Row(
-                children: [SizedBox(width: 74),
+                children: [
+                  SizedBox(width: 62), //pre category box
                   Expanded(
                     /*1*/
                     child: Container(height: 50,
@@ -37,14 +46,14 @@ class RecipesList extends StatelessWidget {
                       ),
 
                       child:
-                      InputDecorator(decoration: InputDecoration(labelText: "category:", border: InputBorder.none, isDense: true),
+                      InputDecorator(decoration: InputDecoration(labelText: "filter by:", border: InputBorder.none, isDense: true),
                         child: DropdownButton(
                           underline: SizedBox(), //no underline
-                          //dropdownColor: Theme.of(context).primaryColorLight,
-                          //style: TextStyle(color: Theme.of(context).primaryColorLight,),
+                          //dropdownColor: theme.primaryColorLight,
+                          //style: TextStyle(color: theme.primaryColorLight,),
                           isExpanded: true,
                           isDense: true,
-                          icon: Icon(Icons.keyboard_arrow_down, color: Theme.of(context).primaryColor),
+                          icon: Icon(Icons.keyboard_arrow_down, color: theme.primaryColor),
                           iconSize: 18,
                           //hint: Text("select a category"),
                           value: recipesModel.idcat,
@@ -61,9 +70,15 @@ class RecipesList extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 24),
+                  SizedBox(width: 26), //after category box
                   /*3*/
-                  InkWell(onTap: (){
+                  InkWell(
+                    child:Icon(
+                      Icons.sort_by_alpha_rounded,
+                      color: theme.primaryColorLight,
+                      size: 30,
+                    ),
+                    onTap: (){
                     showDialog(context: context,
                       builder: (inAlertContext) => AlertDialog(
                         title: Text("list order by", textAlign: TextAlign.center,),
@@ -88,7 +103,7 @@ class RecipesList extends StatelessWidget {
                         //actions: [TextButton(onPressed: (){Navigator.pop(inAlertContext);}, child: Text("CANCEL"))],
                       ),
                     );
-                  },
+                    },
 
                   /*{
                     recipesModel.listOrder == "AZ" ?
@@ -96,19 +111,15 @@ class RecipesList extends StatelessWidget {
                       recipesModel.listOrder = "AZ";
                     recipesModel.loadData(RecipesDBworker.recipesDBworker);
                   },*/
-                    child: Icon(
-                      Icons.sort_by_alpha_rounded,
-                      color: Theme.of(context).primaryColorLight,
-                      size: 30,
-                    ),
+
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: 26), //after AZ
                   Icon(
                     Icons.search_rounded,
-                    color: Theme.of(context).primaryColorLight,
+                    color: theme.primaryColorLight,
                     size: 30,
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 10), //after searh lens
                 ],
               ),
 
@@ -138,9 +149,9 @@ class RecipesList extends StatelessWidget {
               fontSize: 18.0,
               height: 1.8,
             ), children: <TextSpan> [
-              TextSpan(text: "insert your recipes\n"),
-              TextSpan(text: "hitting the"),
-              TextSpan(text: " + ", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32.0, height: 0.8)),
+              TextSpan(text: "insert your recipes!\n"),
+              TextSpan(text: "push the"),
+              TextSpan(text: " + ", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32.0, height: 0.8, color: theme.primaryColorDark)),
               TextSpan(text: "button"),
             ])),
             Image.asset("assets/images/arrow.png", fit: BoxFit.cover, scale: 2)
@@ -173,7 +184,7 @@ class RecipesList extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),),
             clipBehavior: Clip.hardEdge,
-            color: Theme.of(context).primaryColorLight,
+            color: theme.primaryColorLight,
             //padding: EdgeInsets.fromLTRB(0.0,0.0,0.0,0.0),
             margin: EdgeInsets.all(5.0),
             child: Slidable(
@@ -184,8 +195,8 @@ class RecipesList extends StatelessWidget {
                   caption: "DELETE",
                   color: Colors.red,
                   icon: Icons.delete,
+                  //closeOnTap: false,
                   onTap: (){
-                    print("Card deleting");
                     _deleteRecipe(context, recipe, recipe.image);
                   },
                 ),
@@ -222,10 +233,12 @@ class RecipesList extends StatelessWidget {
                         minutes: "${recipe.minutes}",
                       ),
                     ),
-                    Icon(
-                      Icons.arrow_left_rounded,
-                      size: 22.0,
-                      color: Theme.of(context).primaryColor,
+                    Padding(padding: EdgeInsets.only(top: 4),
+                      child: Icon(
+                        Icons.more_vert_rounded, //arrow_left_rounded,
+                        size: 20.0,
+                        color: theme.dividerColor,
+                      ),
                     ),
                   ],
                 ),
@@ -254,7 +267,7 @@ class RecipesList extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           backgroundColor: Colors.red,
-                          duration: Duration(seconds: 2),
+                          duration: Duration(milliseconds: 1500),
                           content: Text("RECIPE DELETED", textAlign: TextAlign.center),
                       ),
                     );
@@ -287,13 +300,15 @@ class _RecipeDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(7.0, 0.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             title,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0,
@@ -320,7 +335,7 @@ class _Details extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+      padding: const EdgeInsets.only(left: 5),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -58,6 +58,10 @@ class RecipesModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setAppbarTitle(){
+    notifyListeners();
+  }
+
   Future<int> deleteImgFile(File file) async {
     try {
       await file.delete();
