@@ -215,7 +215,7 @@ class RecipesList extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: SizedBox.expand(child:
-                        recipe.image != "" ? Image.file(File("${recipe.image}"), fit: BoxFit.cover) : Image.asset("assets/images/dish-placeholder.png", fit: BoxFit.cover),
+                        recipe.image != "" ? Image.file(File("${recipe.image}"), fit: BoxFit.contain) : Image.asset("assets/images/dish-placeholder.png", fit: BoxFit.cover),
                         //fit: BoxFit.cover,
                       ),
                     ),

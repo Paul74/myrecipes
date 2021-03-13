@@ -2,7 +2,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-Directory docsDir;
+Directory docsDir = Directory('/data/user/0/com.example.myrecipes_app/app_flutter'); //just to avoid null
 
 /*
 bool isNumeric(String s) {
