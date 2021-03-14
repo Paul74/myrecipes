@@ -3,15 +3,16 @@ import 'package:sqflite/sqflite.dart';
 import '../common/utils.dart' as utils;
 import '../models/recipes_model.dart';
 import '../models/categories_model.dart';
+import 'dart:async';
 
 class RecipesDBworker {
 
   RecipesDBworker._();
   static final RecipesDBworker recipesDBworker = RecipesDBworker._();
 
-  Database _db;
+  static Database? _db;
 
-  Future<Database> _getDB() async {
+  Future<Database?> _getDB() async {
     if(_db==null){
       String path = join(utils.docsDir.path, "recipes.db");
       _db = await openDatabase(path, version: 1,
@@ -35,19 +36,19 @@ class RecipesDBworker {
           "category TEXT)");
 
           //procedura per creare delle categorie di default nella tabella categories
-            int id0 = await inDB.rawInsert(
+            await inDB.rawInsert(
                 'INSERT INTO categories (id, category) VALUES (0, "~ ALL RECIPES ~")');
-            int id1 = await inDB.rawInsert(
+            await inDB.rawInsert(
                 'INSERT INTO categories (id, category) VALUES (1, "APPETIZERS")');
-            int id2 = await inDB.rawInsert(
+            await inDB.rawInsert(
                 'INSERT INTO categories (id, category) VALUES (2, "STARTERS")');
-            int id3 = await inDB.rawInsert(
+            await inDB.rawInsert(
                 'INSERT INTO categories (id, category) VALUES (3, "MAIN DISHES")');
-            int id4 = await inDB.rawInsert(
+            await inDB.rawInsert(
               'INSERT INTO categories (id, category) VALUES (4, "SALADS")');
-            int id5 = await inDB.rawInsert(
+            await inDB.rawInsert(
               'INSERT INTO categories (id, category) VALUES (5, "SIDE DISHES")');
-            int id6 = await inDB.rawInsert(
+            await inDB.rawInsert(
               'INSERT INTO categories (id, category) VALUES (6, "DESSERTS")');
           //
 
@@ -91,48 +92,50 @@ class RecipesDBworker {
   }
 
   Future create(Recipe inRecipe) async {
-    Database db = await _getDB();
-    var val = await db.rawQuery("SELECT MAX(id) + 1 AS id FROM recipes");
-    int id = val.first["id"];
+    //Database db = await (_getDB() as FutureOr<Database>);
+    Database? db = await _getDB();
+    var val = await db?.rawQuery("SELECT MAX(id) + 1 AS id FROM recipes");
+    int? id = val?.first["id"] as int?;
     if (id==null){
       id = 1;
     }
-    return await db.rawInsert(
+    return await db?.rawInsert(
       "INSERT INTO recipes (id, idCat, title, image, fav, notes, minutes, difficulty, persons, ingredients, preparation) "
       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [id, inRecipe.idCat, inRecipe.title, inRecipe.image, inRecipe.fav, inRecipe.notes, inRecipe.minutes, inRecipe.difficulty, inRecipe.persons, inRecipe.ingredients, inRecipe.preparation]//, inRecipe.color]
     );
   }
 
-  Future<Recipe> get(int inID) async {
-    Database db = await _getDB();
-    var rec = await db.query("recipes", where: "id = ?", whereArgs: [inID]);
-    return recipeFromMap(rec.first);
+  Future<Recipe> get(int? inID) async {
+    //Database db = await (_getDB() as FutureOr<Database>);
+    Database? db = await _getDB();
+    var rec = await db?.query("recipes", where: "id = ?", whereArgs: [inID]);
+    return recipeFromMap(rec!.first);
   }
 
-  Future<List> getAll(int idcat, String order) async {
-    Database db = await _getDB();
-    var recs;
+  Future<List?> getAll(int idcat, String order) async {
+    Database? db = await _getDB();
+    late var recs;
     //var recs = await db.query("recipes");
     if (idcat == 0) {
       if (order=="AZ") {
         //recs = await db.query("recipes"); //IDcat == 0 means all recipes so retrieve all
-        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY title ASC'); //IDcat == 0 means all recipes so retrieve all
+        recs = await db!.rawQuery('SELECT * FROM "recipes" ORDER BY title ASC'); //IDcat == 0 means all recipes so retrieve all
       } else if (order == "ZA") {
-        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY title DESC'); //IDcat == 0 means all recipes so retrieve all
+        recs = await db!.rawQuery('SELECT * FROM "recipes" ORDER BY title DESC'); //IDcat == 0 means all recipes so retrieve all
       } else {
-        recs = await db.rawQuery('SELECT * FROM "recipes" ORDER BY id DESC'); //IDcat == 0 means all recipes so retrieve all
+        recs = await db!.rawQuery('SELECT * FROM "recipes" ORDER BY id DESC'); //IDcat == 0 means all recipes so retrieve all
       }
     }
 
     if (idcat != 0) {
       //recs = await db.query("recipes", where: "idCat = ?", whereArgs: [idcat]);
       if (order=="AZ") {
-        recs = await db.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY title ASC", [idcat]);
+        recs = await db!.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY title ASC", [idcat]);
         } else if (order == "ZA") {
-        recs = await db.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY title DESC", [idcat]);
+        recs = await db!.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY title DESC", [idcat]);
       } else {
-        recs = await db.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY id DESC", [idcat]);
+        recs = await db!.rawQuery("SELECT * FROM recipes WHERE idCat = ? ORDER BY id DESC", [idcat]);
       }
     }
 
@@ -142,13 +145,15 @@ class RecipesDBworker {
 
 
   Future update(Recipe inRecipe) async {
-    Database db = await _getDB();
-    return await db.update("recipes", recipeToMap(inRecipe), where: "id = ?", whereArgs: [inRecipe.id]);
+    //Database db = await (_getDB() as FutureOr<Database>);
+    Database? db = await _getDB();
+    return await db?.update("recipes", recipeToMap(inRecipe), where: "id = ?", whereArgs: [inRecipe.id]);
   }
 
-  Future delete(int inID) async {
-    Database db = await _getDB();
-    return await db.delete("recipes", where: "id = ?", whereArgs: [inID]);
+  Future delete(int? inID) async {
+    //Database db = await (_getDB() as FutureOr<Database>);
+    Database? db = await _getDB();
+    return await db?.delete("recipes", where: "id = ?", whereArgs: [inID]);
   }
 
 
@@ -170,10 +175,13 @@ class RecipesDBworker {
 
 
  Future<List> getAllcategories() async {
-   Database db = await _getDB();
-   var categs = await db.query("categories");
+   //Database db = await (_getDB() as FutureOr<Database>);
+   Database? db = await _getDB();
+   var categs = await db?.query("categories");
+   //print("db $db");
    //var categs = await db.rawQuery('SELECT * FROM "categories" ORDER BY "id"'); //this would work if I need ordering
-   var list = categs.isEmpty ? [] : categs.map((m) => categoryFromMap(m)).toList();
+   //var list = categs.isEmpty ? [] : categs.map((m) => categoryFromMap(m)).toList();
+   var list = categs!.map((m) => categoryFromMap(m)).toList();
    return list;
  }
 

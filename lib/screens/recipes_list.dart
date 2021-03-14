@@ -61,7 +61,7 @@ class RecipesList extends StatelessWidget {
                               child: Text(categ.category),
                               value: categ.id
                           )],
-                          onChanged: (value) {
+                          onChanged: (dynamic value) {
                             recipesModel.idcat = value;
                             recipesModel.loadData(RecipesDBworker.recipesDBworker);
                             //recipesModel.setCategory();
@@ -150,7 +150,7 @@ class RecipesList extends StatelessWidget {
               height: 1.8,
             ), children: <TextSpan> [
               TextSpan(text: "insert your recipes!\n"),
-              TextSpan(text: "push the"),
+              TextSpan(text: "tap the"),
               TextSpan(text: " + ", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 32.0, height: 0.8, color: theme.primaryColorDark)),
               TextSpan(text: "button"),
             ])),
@@ -165,21 +165,6 @@ class RecipesList extends StatelessWidget {
         padding: EdgeInsets.all(4.0),
         itemBuilder: (BuildContext inBuildContext, int inIndex){
           Recipe recipe = recipesModel.recipeList[inIndex];
-          /*Color color = Colors.white;
-          switch(recipe.color){
-            case "red":
-              color = Colors.red;
-              break;
-            case "blue":
-              color = Colors.blue;
-              break;
-            case "yellow":
-              color = Colors.yellow;
-              break;
-            case "grey":
-              color = Colors.grey;
-              break;
-          }*/
           return Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),),
@@ -215,7 +200,7 @@ class RecipesList extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: SizedBox.expand(child:
-                        recipe.image != "" ? Image.file(File("${recipe.image}"), fit: BoxFit.contain) : Image.asset("assets/images/dish-placeholder.png", fit: BoxFit.cover),
+                        recipe.image != "" ? Image.file(File("${recipe.image}"), fit: BoxFit.cover) : Image.asset("assets/images/dish-placeholder.png", fit: BoxFit.cover),
                         //fit: BoxFit.cover,
                       ),
                     ),
@@ -252,7 +237,7 @@ class RecipesList extends StatelessWidget {
     );
   }
 
-  Future _deleteRecipe(BuildContext context, Recipe recipe, String image) async {
+  Future _deleteRecipe(BuildContext context, Recipe recipe, String? image) async {
     return showDialog(context: context, barrierDismissible: false,
       builder: (BuildContext inAlertContext){
           return AlertDialog(
@@ -262,7 +247,7 @@ class RecipesList extends StatelessWidget {
               TextButton(
                   onPressed: () async {
                     await RecipesDBworker.recipesDBworker.delete(recipe.id); //delete db entry
-                    if (image != "") recipesModel.deleteImgFile(File(image)); //delete the image file from device
+                    if (image != "") recipesModel.deleteImgFile(File(image!)); //delete the image file from device
                     Navigator.of(inAlertContext).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -291,11 +276,11 @@ class RecipesList extends StatelessWidget {
 
 class _RecipeDescription extends StatelessWidget {
   const _RecipeDescription({
-    Key key,
+    Key? key,
     this.title,
   }) : super(key: key);
 
-  final String title;
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +291,7 @@ class _RecipeDescription extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            title,
+            title!,
             maxLines: 4,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -322,15 +307,15 @@ class _RecipeDescription extends StatelessWidget {
 
 class _Details extends StatelessWidget {
   const _Details({
-    Key key,
+    Key? key,
     this.fav,
     this.difficulty,
     this.minutes,
   }) : super(key: key);
 
-  final String fav;
-  final String difficulty;
-  final String minutes;
+  final String? fav;
+  final String? difficulty;
+  final String? minutes;
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +328,7 @@ class _Details extends StatelessWidget {
           Icon(Icons.favorite, color: Colors.red, size: 18) : Icon(Icons.favorite_border, color: Colors.grey, size: 18),
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
           Text(
-            difficulty,
+            difficulty!,
             style: const TextStyle(fontSize: 12.0),
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),

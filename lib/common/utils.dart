@@ -14,9 +14,9 @@ bool isNumeric(String s) {
 
 // class for mantaining state between tabs for forms validation in recipes_entry
 class KeepAliveWrapper extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
 
-  const KeepAliveWrapper({Key key, this.child}) : super(key: key);
+  const KeepAliveWrapper({Key? key, this.child}) : super(key: key);
 
   @override
   __KeepAliveWrapperState createState() => __KeepAliveWrapperState();
@@ -27,7 +27,7 @@ class __KeepAliveWrapperState extends State<KeepAliveWrapper>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return widget.child;
+    return widget.child!;
   }
 
   @override

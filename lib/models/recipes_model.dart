@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 class Recipe {
-  int id;
-  int idCat;
-  String image = ""; //path to image file
+  int? id;
+  int? idCat;
+  String? image = ""; //path to image file
   String title = "";
   String notes = "";
-  int fav;
-  int minutes;
+  int fav = 0;
+  int? minutes;
   String difficulty = "";
-  int persons;
+  int? persons;
   String ingredients = "";
   String preparation = "";
   //String color;
@@ -19,10 +19,10 @@ class Recipe {
 
 class RecipesModel extends ChangeNotifier {
   int stackIndex = 0;
-  int idcat = 0; //0 to set default all recipes on recipes list opening
+  int? idcat = 0; //0 to set default all recipes on recipes list opening
   List recipeList = [];
-  Recipe recipeBeingEdited;
-  List<bool> selections; // = [false, false, false];
+  late Recipe recipeBeingEdited;
+  List<bool> selections = [false, false, false];
   String listOrder = "last";
   //File selectedImage; //for image picker
   //bool inProcess = false; //for image picker
@@ -68,7 +68,7 @@ class RecipesModel extends ChangeNotifier {
     } catch (e) {
       print(e);
       return 0;
-    }
+    } return 0;
   }
 
   void loadData(dynamic inDatabaseWorker) async {

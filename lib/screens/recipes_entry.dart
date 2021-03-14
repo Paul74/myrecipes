@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
@@ -12,11 +11,12 @@ import 'package:provider/provider.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+import 'dart:async';
 import '../common/utils.dart' as utils;
 
-File _selectedImage;
-bool _inProcess = false; //for image picker
-File imgToDelete; //path of image to be deleted
+File? _selectedImage;
+//bool _inProcess = false; //for image picker
+File? imgToDelete; //path of image to be deleted
 bool _formChanged = false;
 
 
@@ -35,19 +35,8 @@ class RecipeLoad extends StatelessWidget {
 }
 
 
-
-
-
-
 class RecipesEntry extends StatelessWidget{
-/*
-  //questo codice è se metto Stateful
-  @override
-  _RecipesEntryState createState() => _RecipesEntryState();
-}
 
-class _RecipesEntryState extends State {
-*/
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
@@ -120,7 +109,7 @@ class _RecipesEntryState extends State {
                     ), //(Icons.favorite, color: Colors.red, size: 30),
                     title: TextFormField(maxLines: null,
                       decoration: InputDecoration(labelText: "title:", floatingLabelBehavior: FloatingLabelBehavior.always), //alignLabelWithHint: true,
-                      initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.title,
+                      initialValue: recipesModel.recipeBeingEdited.title,
                       //I prefer to skip this validation and allow for blank title recipe
                       /*validator: (String inValue){
                         if(inValue.length==0){
@@ -217,8 +206,6 @@ class _RecipesEntryState extends State {
 
 
 
-
-
                   ListTile(
                    title: InputDecorator(decoration: InputDecoration(labelText: "category:", floatingLabelBehavior: FloatingLabelBehavior.always),
                      child: DropdownButtonHideUnderline(
@@ -229,39 +216,19 @@ class _RecipesEntryState extends State {
                          //hint: Text("select a category"),
                          value: recipesModel.recipeBeingEdited.idCat == null ? null : recipesModel.recipeBeingEdited.idCat,
                          items: [
-                           for (Category categ in categoriesModel.categoryList) if (categ.id != 0) DropdownMenuItem(child: Text(categ.category), value: categ.id)
+                           for (Category categ in categoriesModel.categoryList)
+                             if (categ.id != 0) DropdownMenuItem(child: Text(categ.category), value: categ.id)
                          ],
-
-/*                     [
-                           DropdownMenuItem(
-                             child: Text("First Item"),
-                             value: 1,
-                           ),
-                           DropdownMenuItem(
-                             child: Text("Second Item"),
-                             value: 2,
-                           ),
-                           DropdownMenuItem(
-                               child: Text("Third Item"),
-                               value: 3
-                           ),
-                           DropdownMenuItem(
-                               child: Text("Fourth Item"),
-                               value: 4
-                           )
-                          ],*/
-
-                           onChanged: (value) {
-                                recipesModel.recipeBeingEdited.idCat = value;
-                                recipesModel.setCategory();
-                                _formChanged = true;
-                             },
-                         ),
+                         onChanged: (dynamic value) {
+                            recipesModel.recipeBeingEdited.idCat = value;
+                            recipesModel.setCategory();
+                            _formChanged = true;
+                         },
+                       ),
                      ),
                    ),
 
                    ),
-
 
 
 
@@ -305,7 +272,7 @@ class _RecipesEntryState extends State {
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                             ],
-                            initialValue: recipesModel.recipeBeingEdited == null ? null : (recipesModel.recipeBeingEdited.minutes ?? "").toString(),
+                            initialValue: (recipesModel.recipeBeingEdited.minutes ?? "").toString(),
                             //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                             /* validator: (String inValue){
                             if(!utils.isNumeric(inValue)){
@@ -332,7 +299,7 @@ class _RecipesEntryState extends State {
                       ),
                       keyboardType: TextInputType.multiline,
                       maxLines: 6,
-                      initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.notes,
+                      initialValue: recipesModel.recipeBeingEdited.notes,
                       //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                       /*validator: (String inValue){
                         if(inValue.length==0){
@@ -363,7 +330,7 @@ class _RecipesEntryState extends State {
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         ],
-                        initialValue: recipesModel.recipeBeingEdited == null ? null : (recipesModel.recipeBeingEdited.persons ?? "").toString(),
+                        initialValue: (recipesModel.recipeBeingEdited.persons ?? "").toString(),
                         //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                         /*validator: (String inValue){
                           if(!utils.isNumeric(inValue)){
@@ -387,7 +354,7 @@ class _RecipesEntryState extends State {
                       ),
                       keyboardType: TextInputType.multiline,
                       maxLines: 15,
-                      initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.ingredients,
+                      initialValue: recipesModel.recipeBeingEdited.ingredients,
                       //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                       /*validator: (String inValue){
                         if(inValue.length==0){
@@ -419,7 +386,7 @@ class _RecipesEntryState extends State {
                         ),
                         keyboardType: TextInputType.multiline,
                         maxLines: 18,
-                        initialValue: recipesModel.recipeBeingEdited == null ? null : recipesModel.recipeBeingEdited.preparation,
+                        initialValue: recipesModel.recipeBeingEdited.preparation,
                         //validator: (String inValue){return inValue.contains('@') ? 'Do not use the @ char.' : null;},
                         /*validator: (String inValue){
                         if(inValue.length==0){
@@ -443,11 +410,6 @@ class _RecipesEntryState extends State {
   }
 
   void _save(BuildContext context) async {
-    //print("formchanged $_formChanged");
-    //prints just for debug, delete
-    //print(_formKey1.currentState);
-    //print(_formKey2.currentState);
-    //print(_formKey3.currentState);
 
     if (_formChanged == false) {
       //add recipe but no data inserted,
@@ -455,36 +417,34 @@ class _RecipesEntryState extends State {
       Navigator.pop(context, '/list');
     } else {
       if (_formKey1.currentState != null) {
-        if (!_formKey1.currentState.validate()) {
+        if (!_formKey1.currentState!.validate()) {
           return;
         }
       }
 
       if (_formKey2.currentState != null) {
-        if (!_formKey2.currentState.validate()) {
+        if (!_formKey2.currentState!.validate()) {
           return;
         }
       }
 
       if (_formKey3.currentState != null) {
-        if (!_formKey3.currentState.validate()) {
+        if (!_formKey3.currentState!.validate()) {
           return;
         }
       }
 
-      //_formKey.currentState.save();
-
       //if the user shot or selected a new image, need to copy the file on device and get the path
       if (_selectedImage != null) {
         final String path = utils.docsDir.path;
-        final String fileName = basename(_selectedImage.path);
-        final File localImage = await _selectedImage.copy('$path/$fileName');
+        final String fileName = basename(_selectedImage!.path);
+        final File localImage = await _selectedImage!.copy('$path/$fileName');
         recipesModel.recipeBeingEdited.image = localImage.path;
       }
       //if deleting I need also to delete the image file on the device
       if (imgToDelete != null) {
         //final File localImage = await imgToDelete.delete();
-        recipesModel.deleteImgFile(imgToDelete);
+        recipesModel.deleteImgFile(imgToDelete!);
         //print("cancellato imgToDelete $imgToDelete");
         imgToDelete = null;
       }
@@ -520,7 +480,7 @@ class _RecipesEntryState extends State {
 class FavIcon extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    if (recipesModel.recipeBeingEdited.fav == null || recipesModel.recipeBeingEdited.fav == 0) {
+    if (recipesModel.recipeBeingEdited.fav == 0) {
       return Icon(Icons.favorite_border, color: Colors.grey);
     } else {
       return Icon(Icons.favorite, color: Colors.red);
@@ -532,44 +492,44 @@ class FavIcon extends StatelessWidget{
 //if deleting I need to delete the file. see above.
 deleteImage() {
   _selectedImage = null;
-  imgToDelete = File(recipesModel.recipeBeingEdited.image);
+  imgToDelete = File(recipesModel.recipeBeingEdited.image!);
   recipesModel.recipeBeingEdited.image = "";
   recipesModel.setImage();
   _formChanged = true;
 }
 
 
-
 getImage(ImageSource source) async {
   final _picker = ImagePicker();
-  _inProcess = true;
-  final pickedFile = await _picker.getImage(source: source);
-  final File image = File(pickedFile.path);
-  if(image != null){
-    File cropped = await ImageCropper.cropImage(
-        sourcePath: image.path,
-        aspectRatio: CropAspectRatio(
-            ratioX: 1.33, ratioY: 1),
-        compressQuality: 100,
-        maxWidth: 930,
-        maxHeight: 700,
-        compressFormat: ImageCompressFormat.jpg,
-        androidUiSettings: AndroidUiSettings(
-          toolbarColor: Color(0xFF795548),
-          toolbarWidgetColor: Colors.white,
-          toolbarTitle: "",
-          //statusBarColor: Colors.deepOrange.shade900,
-          activeControlsWidgetColor: Color(0xFF5D4037),
-          backgroundColor: Colors.white,
-        )
-    );
+  //_inProcess = true;
+  //final pickedFile = await (_picker.getImage(source: source) as FutureOr<PickedFile>);
+  var pickedFile = await _picker.getImage(source: source);
+  final File image = File(pickedFile!.path);
+  //if(image != null){
+  File? cropped = await ImageCropper.cropImage(
+      sourcePath: image.path,
+      aspectRatio: CropAspectRatio(
+          ratioX: 1.33, ratioY: 1),
+      compressQuality: 100,
+      maxWidth: 930,
+      maxHeight: 700,
+      compressFormat: ImageCompressFormat.jpg,
+      androidUiSettings: AndroidUiSettings(
+        toolbarColor: Color(0xFF795548),
+        toolbarWidgetColor: Colors.white,
+        toolbarTitle: "",
+        //statusBarColor: Colors.deepOrange.shade900,
+        activeControlsWidgetColor: Color(0xFF5D4037),
+        backgroundColor: Colors.white,
+      )
+  );
 
     if (cropped != null) { _formChanged = true; _selectedImage = cropped;}
-    _inProcess = false;
+    //_inProcess = false;
 
-  } else {
-    _inProcess = false;
-  }
+  //} else {
+  //  _inProcess = false;
+  //}
   recipesModel.setImage();
 }
 
@@ -581,7 +541,7 @@ Widget getImageWidget() {
   { //if new recipe
     if (_selectedImage != null) {
       return Image.file(
-        _selectedImage,
+        _selectedImage!,
         width: 72,
         height: 54,
         fit: BoxFit.cover,
@@ -601,14 +561,14 @@ Widget getImageWidget() {
       //load image from database
       if (_selectedImage != null) {
         return Image.file(
-          _selectedImage,
+          _selectedImage!,
           width: 72,
           height: 54,
           fit: BoxFit.cover,
         );
       } else {
         return Image.file(
-          File(recipesModel.recipeBeingEdited.image),
+          File(recipesModel.recipeBeingEdited.image!),
           width: 72,
           height: 54,
           fit: BoxFit.cover,
@@ -619,7 +579,7 @@ Widget getImageWidget() {
       //print("editing and NO image on db");
       if (_selectedImage != null) {
         return Image.file(
-          _selectedImage,
+          _selectedImage!,
           width: 72,
           height: 54,
           fit: BoxFit.cover,
@@ -639,14 +599,14 @@ Widget getImageWidget() {
 Widget getImageFullWidget() {
   if (_selectedImage != null) {
     return Image.file(
-      _selectedImage,
+      _selectedImage!,
       width: 373,
       height: 280,
       //fit: BoxFit.cover,
     );
   } else {
     return Image.file(
-      File(recipesModel.recipeBeingEdited.image),
+      File(recipesModel.recipeBeingEdited.image!),
       width: 373,
       height: 280,
       //fit: BoxFit.cover,

@@ -7,14 +7,9 @@
 
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:myrecipes_app/app.dart';
-import 'package:path_provider/path_provider.dart';
 import 'common/utils.dart' as utils;
-import 'db/recipes_db_worker.dart';
-import 'screens/recipes.dart';
-import 'package:myrecipes_app/models/recipes_model.dart';
-import 'package:myrecipes_app/models/categories_model.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 void main() async {
@@ -23,7 +18,7 @@ void main() async {
   //var docsDir = new Directory('/data/user/0/com.example.myrecipes_app/app_flutter'); //per l'ufficio
   utils.docsDir = docsDir;
   //categoriesModel.loadData(RecipesDBworker.recipesDBworker); //provo a metterlo in recipes.dat devo caricare la lista delle categorie
-  runApp(app());
-  print(docsDir);
+  runApp(App());
+  //print(docsDir);
   //runApp(MyApp());
 }
