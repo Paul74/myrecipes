@@ -20,13 +20,7 @@ class App extends StatelessWidget {
         primaryColorLight: Color(0xFFD7CCC8),
         accentColor: Color(0xFFFF9800),
         dividerColor: Color(0xFF8B8B8B),
-        //primaryTextTheme: Typography.material2018().white,
-        //textTheme: Typography.material2018().white,
-        // Define the default font family.
-        //fontFamily: 'Georgia',
-        //canvasColor: Colors.white,
-        // Define the default TextTheme. Use this to specify the default
-        // text styling for headlines, titles, bodies of text, and more.
+
         textTheme: TextTheme(
           //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
           //headline2: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
