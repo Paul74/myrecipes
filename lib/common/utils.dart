@@ -1,16 +1,7 @@
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-Directory docsDir = Directory('/data/user/0/com.example.myrecipes_app/app_flutter'); //just to avoid null
-
-/*
-bool isNumeric(String s) {
-  if (s == null) {
-    return false;
-  }
-  return num.tryParse(s) != null;
-}*/
+Directory docsDir = Directory('/data/user/0/com.example.myrecipes_app/app_flutter');
 
 // class for mantaining state between tabs for forms validation in recipes_entry
 class KeepAliveWrapper extends StatefulWidget {

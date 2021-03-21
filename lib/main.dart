@@ -15,10 +15,7 @@ import 'package:path_provider/path_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Directory docsDir = await getApplicationDocumentsDirectory();
-  //var docsDir = new Directory('/data/user/0/com.example.myrecipes_app/app_flutter'); //per l'ufficio
+  //var docsDir = new Directory('/data/user/0/com.example.myrecipes_app/app_flutter');
   utils.docsDir = docsDir;
-  //categoriesModel.loadData(RecipesDBworker.recipesDBworker); //provo a metterlo in recipes.dat devo caricare la lista delle categorie
   runApp(App());
-  //print(docsDir);
-  //runApp(MyApp());
 }

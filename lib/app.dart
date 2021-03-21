@@ -3,8 +3,8 @@ import 'package:myrecipes_app/screens/recipes_entry.dart';
 import 'screens/recipes.dart';
 
 
-//preferisco gestire le pagine con il semplice navigator, così ho animazioni automatiche e appbar più facili da fare per ogni pagina.
-// vedi https://github.com/flutter/samples/tree/master/provider_shopper
+//prefer using simple navigator, so I get animations and simple management
+//see https://github.com/flutter/samples/tree/master/provider_shopper
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -55,20 +55,7 @@ class App extends StatelessWidget {
             )
           )
         ),
-              /*.text-primary-color    { color: #FFFFFF; }
-              .primary-text-color    { color: #212121; }
-              .secondary-text-color  { color: #757575; }*/
-
       ),
-
-/*  WORKING ORIGINAL
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("myrecipes"),
-        ),
-        body: Recipes(),
-      ),
-*/
 
       //ROUTES
       initialRoute: '/list',

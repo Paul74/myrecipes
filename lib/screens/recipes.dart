@@ -12,7 +12,7 @@ class Recipes extends StatelessWidget {
     recipesModel.loadData(RecipesDBworker.recipesDBworker); //also in recipes_list  don't know if it's best practice
   }
 
-//quello buono
+//old one, with stack, working
   /*  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
@@ -28,7 +28,7 @@ class Recipes extends StatelessWidget {
     );
   }*/
 
-  //provo a usare le routes
+  //using routes
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
@@ -41,24 +41,4 @@ class Recipes extends StatelessWidget {
     );
   }
 
-
-
-
-
-
-
-
-
-
-
-//boh vecchio
-/*  @override
-  Widget build(BuildContext context) {
-    return IndexedStack(
-            index: recipesModel.stackIndex,
-            children: [RecipesList(), RecipesEntry()], // 0=list  1=edit  2=new
-          );
-        }*/
-
-    
 }
